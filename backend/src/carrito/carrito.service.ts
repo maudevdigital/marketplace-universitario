@@ -9,6 +9,9 @@ import { camposProductoPublico } from '../productos/campos-producto';
 
 type ProductoCarrito = { id: number; vendedorId: number; estado: string; stock: number };
 
+// «Solo queda 1 unidad» / «Solo quedan 3 unidades» (el verbo también concuerda con el número).
+const soloQuedan = (stock: number) => (stock === 1 ? 'Solo queda 1 unidad' : `Solo quedan ${stock} unidades`);
+
 // Por qué un ítem del carrito no se puede comprar ahora (null si está todo bien).
 // El carrito se guarda en la base: entre que se agrega y se compra, el vendedor puede pausar,
 // vender a otra persona o bajar el stock. Por eso se revisa cada vez que se muestra.
@@ -17,7 +20,7 @@ export function problemaDelItem(producto: { estado: string; stock: number }, can
   if (producto.estado === 'agotado' || producto.stock === 0) return 'Este producto se agotó.';
   if (producto.estado !== 'activo') return 'Esta publicación ya no está disponible.';
   if (cantidad > producto.stock) {
-    return `Solo quedan ${producto.stock} ${producto.stock === 1 ? 'unidad' : 'unidades'}.`;
+    return `${soloQuedan(producto.stock)}.`;
   }
   return null;
 }
@@ -117,7 +120,7 @@ export class CarritoService {
 
   private validarStock(producto: ProductoCarrito, cantidadFinal: number, yaEnCarrito = 0) {
     if (cantidadFinal <= producto.stock) return;
-    const quedan = `Solo quedan ${producto.stock} ${producto.stock === 1 ? 'unidad' : 'unidades'}`;
+    const quedan = soloQuedan(producto.stock);
     throw new ConflictException(
       yaEnCarrito > 0 ? `${quedan} y ya tienes ${yaEnCarrito} en tu carrito.` : `${quedan}.`,
     );
