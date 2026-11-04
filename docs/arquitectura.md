@@ -210,7 +210,9 @@ Decisiones:
 | PATCH · DELETE 🔒 | `/carrito/items/:productoId` | Cambiar la cantidad `{ cantidad }` o sacar el producto | HU-10 | ✅ |
 | POST 🔒 | `/pedidos` | Comprar todo el carrito: un pedido por vendedor, en una sola transacción | HU-11 | ✅ |
 | GET 🔒 | `/pedidos?rol=comprador\|vendedor`, `/pedidos/:id` | Mis compras o ventas; el detalle (con `miRol` y pagos) solo para comprador y vendedor | HU-11 | ✅ |
-| POST 🔒 | `/pedidos/:id/pago`, `/pedidos/:id/entrega`, `/pedidos/:id/cancelacion` | Estados y pago simulado | HU-12 | |
+| POST 🔒 | `/pedidos/:id/pago` | Pago simulado `{ numeroTarjeta, titular, vencimiento, cvv }`; solo el comprador y solo si está pendiente | HU-12 | ✅ |
+| POST 🔒 | `/pedidos/:id/entrega` | El vendedor marca entregado un pedido pagado | HU-12 | ✅ |
+| POST 🔒 | `/pedidos/:id/cancelacion` | Comprador o vendedor cancelan un pedido pendiente o pagado | HU-12 | ✅ |
 | GET · POST 🔒 | `/conversaciones`, `/conversaciones/:id`, `/conversaciones/:id/mensajes` | Mensajes | HU-13 | |
 
 Códigos: 400 datos inválidos · 401 sin sesión · 403 no es el dueño · 404 no existe ·
@@ -224,9 +226,12 @@ Códigos: 400 datos inválidos · 401 sin sesión · 403 no es el dueño · 404 
 | Solo el dueño edita o elimina una publicación | `ProductosService` | 403 ✅ |
 | Con stock 0 la publicación pasa a «agotado»; con stock vuelve a activo salvo que esté pausada | `ProductosService` | ✅ |
 | Publicar exige stock ≥ 1, precio > 0 y descripción de 20 caracteres o más | `CrearProductoDto` | 400 ✅ |
-| No se compra más que el stock (en el carrito y de nuevo al comprar) | Carrito y pedidos | 409 |
-| El stock se descuenta en una transacción: si un producto falla, no se crea ningún pedido | `PedidosService` | 409 |
-| Nadie compra ni pregunta por su propio producto | Carrito, pedidos, conversaciones | 422 |
-| Estados: pendiente → pagado → entregado; cancelado solo desde pendiente o pagado | `PedidosService` | 409 |
-| Cancelar devuelve el stock y reactiva lo agotado | `PedidosService` | — |
-| Pago simulado: `4242 4242 4242 4242` se aprueba, `4000 0000 0000 0002` se rechaza | `PagosService` | 402 |
+| No se compra más que el stock (en el carrito y de nuevo al comprar) | `CarritoService`, `PedidosService` | 409 ✅ |
+| El stock se descuenta en una transacción: si un producto falla, no se crea ningún pedido | `PedidosService` | 409 ✅ |
+| Nadie compra ni pregunta por su propio producto | Carrito ✅, pedidos ✅, conversaciones | 422 |
+| Estados: pendiente → pagado → entregado; cancelado solo desde pendiente o pagado | `PagosService` | 409 ✅ |
+| Cancelar devuelve el stock y reactiva lo agotado (lo pausado sigue pausado) | `PagosService` | ✅ |
+| Pago simulado: `4242 4242 4242 4242` se aprueba, `4000 0000 0000 0002` se rechaza (queda registrado y se puede reintentar); otra tarjeta es 400 | `PagosService` | 402 ✅ |
+| Solo el comprador paga y solo el vendedor marca la entrega | `PagosService` | 403 ✅ |
+| Dos compras o pagos simultáneos: el cambio se aplica «solo si sigue en el estado esperado», así uno gana y el otro recibe 409 | `PedidosService`, `PagosService` | 409 ✅ |
+| Los datos de la tarjeta se validan pero nunca se guardan | `PagarPedidoDto` | — |

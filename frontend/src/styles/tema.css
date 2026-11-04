@@ -265,6 +265,43 @@ body {
   top: 5rem;
 }
 
+/* Seguimiento del pedido (HU-12) */
+.linea-tiempo li {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.35rem 0;
+  color: var(--color-text-muted);
+}
+
+.linea-tiempo li i {
+  width: 2rem;
+  height: 2rem;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  border: 2px solid var(--color-border);
+  flex-shrink: 0;
+}
+
+.linea-tiempo li.hecho {
+  color: var(--color-text);
+  font-weight: 500;
+}
+
+.linea-tiempo li.hecho i {
+  border-color: var(--color-secundary);
+  color: var(--color-secundary);
+}
+
+.linea-tiempo li.cancelado {
+  color: var(--color-danger);
+}
+
+.linea-tiempo li.cancelado i {
+  border-color: var(--color-danger);
+}
+
 /* Estados de pantalla: cargando, error y vacío */
 .estado-pantalla {
   display: flex;
