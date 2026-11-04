@@ -7,7 +7,10 @@ import { useState } from 'react';
 // Barra superior. Cada historia agrega su enlace en ENLACES cuando su página exista:
 //   HU-06 Catálogo · HU-07 Publicar y Mis publicaciones · HU-09 Favoritos
 //   HU-10 Carrito · HU-11 Mis pedidos y Mis ventas · HU-13 Mensajes
-const ENLACES = [{ ruta: '/', texto: 'Inicio', icono: 'house' }];
+const ENLACES = [
+  { ruta: '/', texto: 'Inicio', icono: 'house' },
+  { ruta: '/catalogo', texto: 'Catálogo', icono: 'grid' },
+];
 const ENLACES_CON_SESION = [];
 
 export default function Navbar() {

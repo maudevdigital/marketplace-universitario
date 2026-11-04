@@ -13,4 +13,17 @@ export const actualizarProducto = (id, formData) =>
 
 export const eliminarProducto = (id) => pedir(`/productos/${id}`, { metodo: 'DELETE' });
 
-// HU-06 (Matías) agrega aquí listarProductos(filtros) y obtenerProducto(id).
+// HU-06: catálogo público y detalle.
+// filtros: { q, categoria, precioMin, precioMax, orden, pagina }; los vacíos no se envían.
+export function listarProductos(filtros = {}) {
+  const parametros = new URLSearchParams();
+  for (const [clave, valor] of Object.entries(filtros)) {
+    if (valor !== undefined && valor !== null && String(valor).trim() !== '') {
+      parametros.set(clave, String(valor).trim());
+    }
+  }
+  const consulta = parametros.toString();
+  return pedir(`/productos${consulta ? `?${consulta}` : ''}`);
+}
+
+export const obtenerProducto = (id) => pedir(`/productos/${id}`);
