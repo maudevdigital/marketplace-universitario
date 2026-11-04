@@ -1,0 +1,177 @@
+// Modelo relacional del Marketplace Universitario (PostgreSQL).
+// Es el contrato del equipo: ver docs/arquitectura.md antes de cambiar una tabla.
+// Las restricciones CHECK y el índice parcial de pagos no se pueden escribir en Prisma:
+// están agregados a mano en la migración inicial (prisma/migrations/…_inicial/migration.sql).
+
+generator client {
+  provider      = "prisma-client-js"
+  // "native" para correr en Windows; la otra para la imagen node:22-slim de Docker
+  binaryTargets = ["native", "debian-openssl-3.0.x"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum EstadoProducto {
+  activo
+  pausado
+  agotado
+  eliminado
+}
+
+enum CondicionProducto {
+  nuevo
+  como_nuevo
+  usado
+}
+
+enum EstadoPedido {
+  pendiente
+  pagado
+  entregado
+  cancelado
+}
+
+enum EstadoPago {
+  aprobado
+  rechazado
+}
+
+// Un mismo usuario compra y vende: el «perfil» depende de la vista.
+model Usuario {
+  id             Int           @id @default(autoincrement())
+  nombre         String        @db.VarChar(80)
+  correo         String        @unique @db.VarChar(120)
+  hashContrasena String        @map("hash_contrasena")
+  carrera        String?       @db.VarChar(80)
+  creadoEn       DateTime      @default(now()) @map("creado_en")
+  productos      Producto[]
+  favoritos      Favorito[]
+  itemsCarrito   ItemCarrito[]
+  compras        Pedido[]      @relation("compras")
+  ventas         Pedido[]      @relation("ventas")
+
+  @@map("usuarios")
+}
+
+model Categoria {
+  id            Int                     @id @default(autoincrement())
+  nombre        String                  @unique @db.VarChar(40)
+  // Nombre de un ícono de Bootstrap Icons, por ejemplo "book"
+  icono         String                  @db.VarChar(40)
+  productos     Producto[]
+  equivalencias EquivalenciaCategoria[]
+
+  @@map("categorias")
+}
+
+// Traduce una categoría de Mercado Libre a una de las nuestras (HU-08).
+model EquivalenciaCategoria {
+  id                    Int       @id @default(autoincrement())
+  categoriaMercadoLibre String    @unique @map("categoria_mercado_libre") @db.VarChar(120)
+  categoriaId           Int       @map("categoria_id")
+  categoria             Categoria @relation(fields: [categoriaId], references: [id], onDelete: Cascade)
+
+  @@map("equivalencias_categoria")
+}
+
+model Producto {
+  id            Int               @id @default(autoincrement())
+  vendedorId    Int               @map("vendedor_id")
+  categoriaId   Int               @map("categoria_id")
+  titulo        String            @db.VarChar(120)
+  descripcion   String
+  marca         String?           @db.VarChar(60)
+  modelo        String?           @db.VarChar(60)
+  condicion     CondicionProducto @default(usado)
+  // Pesos chilenos, sin decimales
+  precio        Int
+  stock         Int
+  estado        EstadoProducto    @default(activo)
+  // Ruta pública de la imagen, por ejemplo "/imagenes/libro1.webp"
+  imagen        String?           @db.VarChar(200)
+  creadoEn      DateTime          @default(now()) @map("creado_en")
+  actualizadoEn DateTime          @updatedAt @map("actualizado_en")
+  vendedor      Usuario           @relation(fields: [vendedorId], references: [id], onDelete: Restrict)
+  categoria     Categoria         @relation(fields: [categoriaId], references: [id], onDelete: Restrict)
+  favoritos     Favorito[]
+  itemsCarrito  ItemCarrito[]
+  detalles      DetallePedido[]
+
+  @@index([categoriaId])
+  @@index([vendedorId])
+  @@index([estado])
+  @@map("productos")
+}
+
+model Favorito {
+  usuarioId  Int      @map("usuario_id")
+  productoId Int      @map("producto_id")
+  creadoEn   DateTime @default(now()) @map("creado_en")
+  usuario    Usuario  @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
+  producto   Producto @relation(fields: [productoId], references: [id], onDelete: Cascade)
+
+  @@id([usuarioId, productoId])
+  @@map("favoritos")
+}
+
+model ItemCarrito {
+  usuarioId  Int      @map("usuario_id")
+  productoId Int      @map("producto_id")
+  cantidad   Int
+  usuario    Usuario  @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
+  producto   Producto @relation(fields: [productoId], references: [id], onDelete: Cascade)
+
+  @@id([usuarioId, productoId])
+  @@map("items_carrito")
+}
+
+// Un carrito con productos de dos vendedores genera dos pedidos (uno por vendedor).
+model Pedido {
+  id            Int             @id @default(autoincrement())
+  compradorId   Int             @map("comprador_id")
+  vendedorId    Int             @map("vendedor_id")
+  estado        EstadoPedido    @default(pendiente)
+  total         Int
+  creadoEn      DateTime        @default(now()) @map("creado_en")
+  actualizadoEn DateTime        @updatedAt @map("actualizado_en")
+  comprador     Usuario         @relation("compras", fields: [compradorId], references: [id], onDelete: Restrict)
+  vendedor      Usuario         @relation("ventas", fields: [vendedorId], references: [id], onDelete: Restrict)
+  detalles      DetallePedido[]
+  pagos         Pago[]
+
+  @@index([compradorId])
+  @@index([vendedorId])
+  @@map("pedidos")
+}
+
+model DetallePedido {
+  id             Int      @id @default(autoincrement())
+  pedidoId       Int      @map("pedido_id")
+  productoId     Int      @map("producto_id")
+  cantidad       Int
+  // Se copia al comprar: un cambio de precio posterior no altera el pedido
+  precioUnitario Int      @map("precio_unitario")
+  subtotal       Int
+  pedido         Pedido   @relation(fields: [pedidoId], references: [id], onDelete: Cascade)
+  producto       Producto @relation(fields: [productoId], references: [id], onDelete: Restrict)
+
+  @@index([pedidoId])
+  @@map("detalles_pedido")
+}
+
+// Pago simulado: no se conecta con ningún medio de pago real.
+model Pago {
+  id          Int        @id @default(autoincrement())
+  pedidoId    Int        @map("pedido_id")
+  monto       Int
+  estado      EstadoPago
+  comprobante String     @unique @db.VarChar(40)
+  creadoEn    DateTime   @default(now()) @map("creado_en")
+  pedido      Pedido     @relation(fields: [pedidoId], references: [id], onDelete: Cascade)
+
+  @@index([pedidoId])
+  @@map("pagos")
+}
