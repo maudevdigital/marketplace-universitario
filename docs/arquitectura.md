@@ -204,7 +204,7 @@ Decisiones:
 | GET | `/productos` | Catálogo: `q`, `categoria`, `precioMin`, `precioMax`, `orden`, `pagina` (12 por página, solo activos) | HU-06 | ✅ |
 | GET | `/productos/:id` | Detalle con datos del vendedor (incluye pausados y agotados) | HU-06 | ✅ |
 | GET 🔒 | `/sugerencias/producto?titulo=` | Autocompletar con Mercado Libre | HU-08 | |
-| GET · POST · DELETE 🔒 | `/favoritos`, `/favoritos/:productoId` | Favoritos | HU-09 | |
+| GET · POST · DELETE 🔒 | `/favoritos`, `/favoritos/:productoId` | Favoritos (marcar y quitar se pueden repetir sin error) | HU-09 | ✅ |
 | GET · POST · PATCH · DELETE 🔒 | `/carrito`, `/carrito/items/:productoId` | Carrito con tope de stock | HU-10 | |
 | POST · GET 🔒 | `/pedidos`, `/pedidos?rol=comprador\|vendedor`, `/pedidos/:id` | Comprar y seguir pedidos | HU-11 | |
 | POST 🔒 | `/pedidos/:id/pago`, `/pedidos/:id/entrega`, `/pedidos/:id/cancelacion` | Estados y pago simulado | HU-12 | |
