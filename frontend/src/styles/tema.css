@@ -242,6 +242,29 @@ body {
   border-color: var(--color-danger);
 }
 
+/* Carrito (HU-10) */
+.campo-cantidad {
+  width: 6rem;
+}
+
+.selector-cantidad {
+  width: auto;
+  flex-wrap: nowrap;
+}
+
+.selector-cantidad .input-group-text {
+  min-width: 2.75rem;
+  justify-content: center;
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  border-color: var(--color-border);
+}
+
+.resumen-carrito {
+  position: sticky;
+  top: 5rem;
+}
+
 /* Estados de pantalla: cargando, error y vacío */
 .estado-pantalla {
   display: flex;

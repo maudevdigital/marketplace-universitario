@@ -1,4 +1,5 @@
 import { Link, useParams } from 'react-router-dom';
+import AgregarAlCarrito from '../components/AgregarAlCarrito';
 import BotonFavorito from '../components/BotonFavorito';
 import Cargando from '../components/Cargando';
 import MensajeError from '../components/MensajeError';
@@ -74,6 +75,7 @@ export default function DetalleProducto() {
             <dd className="col-8">{producto.stock} {producto.stock === 1 ? 'unidad' : 'unidades'}</dd>
           </dl>
 
+          <AgregarAlCarrito producto={producto} />
           <div className="d-flex flex-wrap gap-2 mb-3">
             <BotonFavorito producto={producto} conTexto />
           </div>
