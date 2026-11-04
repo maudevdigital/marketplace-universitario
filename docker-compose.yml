@@ -1,0 +1,66 @@
+# Levanta todo el Marketplace Universitario:
+#   cp .env.example .env
+#   docker compose up --build
+# API: http://localhost:3000 · Swagger: http://localhost:3000/docs
+name: marketplace-universitario
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:?Copia .env.example a .env}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Copia .env.example a .env}
+      POSTGRES_DB: ${POSTGRES_DB:?Copia .env.example a .env}
+    ports:
+      # 5433 afuera para no chocar con un PostgreSQL instalado en el computador
+      - "5433:5432"
+    volumes:
+      - postgres-datos:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  mongo:
+    image: mongo:7
+    ports:
+      - "27018:27017"
+    volumes:
+      - mongo-datos:/data/db
+    healthcheck:
+      test: ["CMD", "mongosh", "--quiet", "--eval", "db.adminCommand('ping')"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  backend:
+    build: ./backend
+    environment:
+      DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}
+      MONGO_URI: mongodb://mongo:27017/marketplace
+      JWT_SECRET: ${JWT_SECRET:?Copia .env.example a .env}
+      JWT_EXPIRA: 8h
+      PORT: 3000
+      CORS_ORIGEN: http://localhost:8080,http://localhost:5173
+      IMAGENES_DIR: /app/almacen/imagenes
+    ports:
+      - "3000:3000"
+    volumes:
+      - imagenes-subidas:/app/almacen/imagenes
+    depends_on:
+      postgres:
+        condition: service_healthy
+      mongo:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://localhost:3000/salud').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 20s
+
+volumes:
+  postgres-datos:
+  mongo-datos:
+  imagenes-subidas:
