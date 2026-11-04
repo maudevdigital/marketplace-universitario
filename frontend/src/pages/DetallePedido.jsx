@@ -1,6 +1,8 @@
 import { Link, useParams } from 'react-router-dom';
+import AccionesPedido from '../components/AccionesPedido';
 import Cargando from '../components/Cargando';
 import EstadoPedido from '../components/EstadoPedido';
+import LineaTiempoPedido from '../components/LineaTiempoPedido';
 import MensajeError from '../components/MensajeError';
 import usePeticion from '../hooks/usePeticion';
 import { urlImagen } from '../services/api';
@@ -8,9 +10,11 @@ import { obtenerPedido } from '../services/pedidos';
 import { formatearFecha, formatearPrecio } from '../utils/formato';
 
 // Detalle de un pedido (HU-11): productos, montos y la otra persona del pedido.
+// HU-12: seguimiento, pago simulado, entrega y cancelación.
 export default function DetallePedido() {
   const { id } = useParams();
-  const { datos: pedido, cargando, error, recargar } = usePeticion(() => obtenerPedido(id), [id]);
+  // setDatos: las acciones devuelven el pedido actualizado y la pantalla lo reemplaza sin recargar.
+  const { datos: pedido, cargando, error, recargar, setDatos } = usePeticion(() => obtenerPedido(id), [id]);
 
   if (cargando) return <Cargando texto="Cargando pedido…" />;
   if (error) {
@@ -76,7 +80,8 @@ export default function DetallePedido() {
               <Link to={`/usuarios/${contraparte.id}`} className="btn btn-sm btn-outline-primary">Perfil</Link>
             </div>
           </div>
-          {/* HU-12: pago simulado, entrega y cancelación */}
+          <AccionesPedido pedido={pedido} alActualizar={setDatos} />
+          <LineaTiempoPedido pedido={pedido} />
         </aside>
       </div>
     </section>
