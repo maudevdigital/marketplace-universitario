@@ -14,12 +14,19 @@ export function crearTuberiaValidacion() {
   });
 }
 
+// Reglas que revisan el tipo del dato. Si el tipo está mal, las demás reglas de ese campo
+// (mínimo, máximo, largo) también fallan y sus mensajes confunden: con un precio vacío se
+// leía «no puede superar $100.000.000» junto a «debe ser mayor que cero». Se muestra solo el de tipo.
+const REGLAS_DE_TIPO = ['isInt', 'isNumber', 'isString', 'isBoolean', 'isEnum', 'isEmail'];
+
 function mensajes(errores: ValidationError[]): string[] {
   return errores.flatMap((error) => {
-    if (error.constraints?.whitelistValidation) {
+    const reglas = error.constraints ?? {};
+    if (reglas.whitelistValidation) {
       return [`El campo «${error.property}» no está permitido.`];
     }
-    const propios = Object.values(error.constraints ?? {});
+    const deTipo = REGLAS_DE_TIPO.filter((regla) => regla in reglas).map((regla) => reglas[regla]);
+    const propios = deTipo.length > 0 ? deTipo : Object.values(reglas);
     return [...propios, ...mensajes(error.children ?? [])];
   });
 }
