@@ -229,6 +229,19 @@ body {
   background-color: var(--color-bg-light);
 }
 
+/* Favoritos (HU-09) */
+.boton-favorito {
+  color: var(--color-text-muted);
+  border: 1px solid var(--color-border);
+  background-color: var(--color-bg);
+}
+
+.boton-favorito:hover,
+.boton-favorito.marcado {
+  color: var(--color-danger);
+  border-color: var(--color-danger);
+}
+
 /* Estados de pantalla: cargando, error y vacío */
 .estado-pantalla {
   display: flex;

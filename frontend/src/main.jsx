@@ -6,6 +6,7 @@ import 'bootstrap-icons/font/bootstrap-icons.css';
 import './styles/tema.css';
 import App from './App';
 import AvisosProvider from './context/AvisosProvider';
+import FavoritosProvider from './context/FavoritosProvider';
 import SesionProvider from './context/SesionProvider';
 
 createRoot(document.getElementById('root')).render(
@@ -13,7 +14,9 @@ createRoot(document.getElementById('root')).render(
     <BrowserRouter>
       <AvisosProvider>
         <SesionProvider>
-          <App />
+          <FavoritosProvider>
+            <App />
+          </FavoritosProvider>
         </SesionProvider>
       </AvisosProvider>
     </BrowserRouter>
