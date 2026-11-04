@@ -1,6 +1,7 @@
 import { Route, Routes } from 'react-router-dom';
 import Layout from './components/Layout';
 import RutaProtegida from './components/RutaProtegida';
+import Carrito from './pages/Carrito';
 import Catalogo from './pages/Catalogo';
 import DetalleProducto from './pages/DetalleProducto';
 import EditarProducto from './pages/EditarProducto';
@@ -32,6 +33,7 @@ export default function App() {
         <Route path="publicar" element={<RutaProtegida><Publicar /></RutaProtegida>} />
         <Route path="mis-publicaciones" element={<RutaProtegida><MisPublicaciones /></RutaProtegida>} />
         <Route path="favoritos" element={<RutaProtegida><Favoritos /></RutaProtegida>} />
+        <Route path="carrito" element={<RutaProtegida><Carrito /></RutaProtegida>} />
         <Route path="productos/:id/editar" element={<RutaProtegida><EditarProducto /></RutaProtegida>} />
         <Route path="usuarios/:id" element={<PerfilVendedor />} />
         <Route path="*" element={<NoEncontrada />} />

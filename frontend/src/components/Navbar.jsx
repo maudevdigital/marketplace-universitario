@@ -14,6 +14,7 @@ const ENLACES = [
 const ENLACES_CON_SESION = [
   { ruta: '/publicar', texto: 'Publicar', icono: 'plus-circle' },
   { ruta: '/favoritos', texto: 'Favoritos', icono: 'heart' },
+  { ruta: '/carrito', texto: 'Carrito', icono: 'cart' },
 ];
 const MENU_USUARIO = [{ ruta: '/mis-publicaciones', texto: 'Mis publicaciones', icono: 'shop-window' }];
 
