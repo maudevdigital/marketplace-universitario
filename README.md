@@ -11,7 +11,7 @@ Hito 3 de Desarrollo Web y Móvil (segundo semestre 2026), **caso 3.4: Marketpla
 | Nombre | GitHub | Historias |
 |---|---|---|
 | Lucas Maulén Riquelme | [maudevdigital](https://github.com/maudevdigital) | HU-01 a HU-05, integración, presentación |
-| Matías Catalán Ortega | _completar_ | HU-06, HU-07, HU-09 a HU-12 |
+| Matías Catalán Ortega | [maticata011-bit](https://github.com/maticata011-bit) | HU-06, HU-07, HU-09 a HU-12 |
 | Juan Soto Toledo | _completar_ | HU-08, HU-13 a HU-15 |
 
 ## Continuidad
