@@ -2,6 +2,7 @@ import { useSearchParams } from 'react-router-dom';
 import Cargando from '../components/Cargando';
 import EstadoVacio from '../components/EstadoVacio';
 import MensajeError from '../components/MensajeError';
+import BotonFavorito from '../components/BotonFavorito';
 import Paginacion from '../components/Paginacion';
 import TarjetaProducto from '../components/TarjetaProducto';
 import usePeticion from '../hooks/usePeticion';
@@ -135,7 +136,12 @@ function Resultados({ datos, cargando, error, recargar, hayFiltros, alCambiarPag
         <ul className="row g-3 list-unstyled">
           {datos.productos.map((producto) => (
             <li key={producto.id} className="col-12 col-sm-6 col-lg-4 col-xl-3">
-              <TarjetaProducto producto={producto} />
+              <TarjetaProducto producto={producto}>
+                <div className="d-flex justify-content-between align-items-center gap-2">
+                  <span className="small text-muted text-truncate">{producto.vendedor.nombre}</span>
+                  <BotonFavorito producto={producto} />
+                </div>
+              </TarjetaProducto>
             </li>
           ))}
         </ul>

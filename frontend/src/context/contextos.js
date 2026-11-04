@@ -4,3 +4,4 @@ import { createContext } from 'react';
 // recargar los componentes en caliente (regla react-refresh del lint).
 export const SesionContexto = createContext(null);
 export const AvisosContexto = createContext(null);
+export const FavoritosContexto = createContext(null);

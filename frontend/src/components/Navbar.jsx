@@ -11,7 +11,10 @@ const ENLACES = [
   { ruta: '/', texto: 'Inicio', icono: 'house' },
   { ruta: '/catalogo', texto: 'Catálogo', icono: 'grid' },
 ];
-const ENLACES_CON_SESION = [{ ruta: '/publicar', texto: 'Publicar', icono: 'plus-circle' }];
+const ENLACES_CON_SESION = [
+  { ruta: '/publicar', texto: 'Publicar', icono: 'plus-circle' },
+  { ruta: '/favoritos', texto: 'Favoritos', icono: 'heart' },
+];
 const MENU_USUARIO = [{ ruta: '/mis-publicaciones', texto: 'Mis publicaciones', icono: 'shop-window' }];
 
 export default function Navbar() {

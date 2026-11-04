@@ -4,6 +4,7 @@ import RutaProtegida from './components/RutaProtegida';
 import Catalogo from './pages/Catalogo';
 import DetalleProducto from './pages/DetalleProducto';
 import EditarProducto from './pages/EditarProducto';
+import Favoritos from './pages/Favoritos';
 import Ingreso from './pages/Ingreso';
 import Inicio from './pages/Inicio';
 import MisPublicaciones from './pages/MisPublicaciones';
@@ -30,6 +31,7 @@ export default function App() {
         <Route path="productos/:id" element={<DetalleProducto />} />
         <Route path="publicar" element={<RutaProtegida><Publicar /></RutaProtegida>} />
         <Route path="mis-publicaciones" element={<RutaProtegida><MisPublicaciones /></RutaProtegida>} />
+        <Route path="favoritos" element={<RutaProtegida><Favoritos /></RutaProtegida>} />
         <Route path="productos/:id/editar" element={<RutaProtegida><EditarProducto /></RutaProtegida>} />
         <Route path="usuarios/:id" element={<PerfilVendedor />} />
         <Route path="*" element={<NoEncontrada />} />

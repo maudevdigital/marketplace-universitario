@@ -7,6 +7,7 @@ import { AuthModule } from './auth/auth.module';
 import { UsuariosModule } from './usuarios/usuarios.module';
 import { CategoriasModule } from './categorias/categorias.module';
 import { ProductosModule } from './productos/productos.module';
+import { FavoritosModule } from './favoritos/favoritos.module';
 
 // Cada integrante agrega aquí el módulo de su historia (favoritos, carrito, pedidos,
 // conversaciones, sugerencias…), siempre en su propia carpeta dentro de src/.
@@ -19,6 +20,7 @@ import { ProductosModule } from './productos/productos.module';
     UsuariosModule,
     CategoriasModule,
     ProductosModule,
+    FavoritosModule,
   ],
   controllers: [SaludController],
 })

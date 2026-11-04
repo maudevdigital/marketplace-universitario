@@ -1,4 +1,5 @@
 import { Link, useParams } from 'react-router-dom';
+import BotonFavorito from '../components/BotonFavorito';
 import Cargando from '../components/Cargando';
 import MensajeError from '../components/MensajeError';
 import usePeticion from '../hooks/usePeticion';
@@ -72,6 +73,10 @@ export default function DetalleProducto() {
             <dt className="col-4">Disponibles</dt>
             <dd className="col-8">{producto.stock} {producto.stock === 1 ? 'unidad' : 'unidades'}</dd>
           </dl>
+
+          <div className="d-flex flex-wrap gap-2 mb-3">
+            <BotonFavorito producto={producto} conTexto />
+          </div>
 
           {esPropio && (
             <div className="d-flex flex-wrap gap-2 mb-3">
