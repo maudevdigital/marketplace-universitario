@@ -1,5 +1,7 @@
 import { Route, Routes } from 'react-router-dom';
 import Layout from './components/Layout';
+import Catalogo from './pages/Catalogo';
+import DetalleProducto from './pages/DetalleProducto';
 import Ingreso from './pages/Ingreso';
 import Inicio from './pages/Inicio';
 import NoEncontrada from './pages/NoEncontrada';
@@ -20,6 +22,8 @@ export default function App() {
         <Route index element={<Inicio />} />
         <Route path="ingresar" element={<Ingreso />} />
         <Route path="registro" element={<Registro />} />
+        <Route path="catalogo" element={<Catalogo />} />
+        <Route path="productos/:id" element={<DetalleProducto />} />
         <Route path="usuarios/:id" element={<PerfilVendedor />} />
         <Route path="*" element={<NoEncontrada />} />
       </Route>

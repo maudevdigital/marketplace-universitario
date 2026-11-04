@@ -1,10 +1,17 @@
 import { BadRequestException, ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
-import { EstadoProducto } from '@prisma/client';
+import { EstadoProducto, Prisma } from '@prisma/client';
 import { CategoriasService } from '../categorias/categorias.service';
 import { borrarImagenSubida, rutaPublica } from '../comun/imagenes';
 import { PrismaService } from '../comun/prisma/prisma.service';
 import { camposProductoPublico } from './campos-producto';
+import { FiltrosCatalogoDto, OrdenCatalogo, POR_PAGINA } from './dto/catalogo.dto';
 import { ActualizarProductoDto, CrearProductoDto } from './dto/producto.dto';
+
+const ORDEN_PRISMA: Record<OrdenCatalogo, Prisma.ProductoOrderByWithRelationInput[]> = {
+  recientes: [{ creadoEn: 'desc' }, { id: 'desc' }],
+  precio_asc: [{ precio: 'asc' }, { id: 'desc' }],
+  precio_desc: [{ precio: 'desc' }, { id: 'desc' }],
+};
 
 @Injectable()
 export class ProductosService {
@@ -12,6 +19,56 @@ export class ProductosService {
     private readonly prisma: PrismaService,
     private readonly categorias: CategoriasService,
   ) {}
+
+  // HU-06: catálogo público. Solo muestra publicaciones activas (con stock y sin pausar).
+  async catalogo(filtros: FiltrosCatalogoDto) {
+    const { q, categoria, precioMin, precioMax, orden = 'recientes', pagina = 1 } = filtros;
+    if (precioMin !== undefined && precioMax !== undefined && precioMin > precioMax) {
+      throw new BadRequestException('El precio mínimo no puede ser mayor que el máximo.');
+    }
+
+    const where: Prisma.ProductoWhereInput = {
+      estado: 'activo',
+      ...(categoria && { categoriaId: categoria }),
+      ...((precioMin !== undefined || precioMax !== undefined) && {
+        precio: { gte: precioMin, lte: precioMax },
+      }),
+      ...(q && {
+        OR: (['titulo', 'descripcion', 'marca', 'modelo'] as const).map((campo) => ({
+          [campo]: { contains: q, mode: 'insensitive' as const },
+        })),
+      }),
+    };
+
+    const [total, productos] = await this.prisma.$transaction([
+      this.prisma.producto.count({ where }),
+      this.prisma.producto.findMany({
+        where,
+        orderBy: ORDEN_PRISMA[orden],
+        skip: (pagina - 1) * POR_PAGINA,
+        take: POR_PAGINA,
+        select: camposProductoPublico,
+      }),
+    ]);
+
+    return {
+      productos,
+      total,
+      pagina,
+      porPagina: POR_PAGINA,
+      totalPaginas: Math.max(1, Math.ceil(total / POR_PAGINA)),
+    };
+  }
+
+  // HU-06: detalle público. También responde por publicaciones pausadas o agotadas
+  // (el estado viaja en la respuesta), porque se llega a ellas desde favoritos o pedidos.
+  async detalle(id: number) {
+    const producto = await this.prisma.producto.findUnique({ where: { id }, select: camposProductoPublico });
+    if (!producto || producto.estado === 'eliminado') {
+      throw new NotFoundException('La publicación no existe.');
+    }
+    return producto;
+  }
 
   async crear(vendedorId: number, datos: CrearProductoDto, archivo?: Express.Multer.File) {
     await this.validarCategoria(datos.categoriaId);
