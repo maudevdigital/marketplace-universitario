@@ -16,7 +16,11 @@ const ENLACES_CON_SESION = [
   { ruta: '/favoritos', texto: 'Favoritos', icono: 'heart' },
   { ruta: '/carrito', texto: 'Carrito', icono: 'cart' },
 ];
-const MENU_USUARIO = [{ ruta: '/mis-publicaciones', texto: 'Mis publicaciones', icono: 'shop-window' }];
+const MENU_USUARIO = [
+  { ruta: '/mis-publicaciones', texto: 'Mis publicaciones', icono: 'shop-window' },
+  { ruta: '/pedidos', texto: 'Mis pedidos', icono: 'bag-check' },
+  { ruta: '/ventas', texto: 'Mis ventas', icono: 'cash-coin' },
+];
 
 export default function Navbar() {
   const { usuario, salir } = useSesion();
