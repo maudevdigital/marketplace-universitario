@@ -5,6 +5,8 @@ import { PrismaModule } from './comun/prisma/prisma.module';
 import { SaludController } from './comun/salud.controller';
 import { AuthModule } from './auth/auth.module';
 import { UsuariosModule } from './usuarios/usuarios.module';
+import { CategoriasModule } from './categorias/categorias.module';
+import { ProductosModule } from './productos/productos.module';
 
 // Cada integrante agrega aquí el módulo de su historia (favoritos, carrito, pedidos,
 // conversaciones, sugerencias…), siempre en su propia carpeta dentro de src/.
@@ -15,6 +17,8 @@ import { UsuariosModule } from './usuarios/usuarios.module';
     PrismaModule,
     AuthModule,
     UsuariosModule,
+    CategoriasModule,
+    ProductosModule,
   ],
   controllers: [SaludController],
 })
