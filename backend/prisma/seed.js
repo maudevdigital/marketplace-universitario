@@ -18,7 +18,7 @@ const categorias = [
   { nombre: 'Deportes', icono: 'bicycle' },
 ];
 
-// Los vendedores de la Actividad 1, más una cuenta que solo compra para la demostración.
+// Los vendedores de la Actividad 1, una cuenta que solo compra y las cuentas del equipo.
 const usuarios = [
   { nombre: 'Camila Rojas', correo: 'camila.rojas@alumnos.cl', carrera: 'Ingeniería Civil' },
   { nombre: 'Carlos Mendoza', correo: 'carlos.mendoza@alumnos.cl', carrera: 'Ingeniería Física' },
@@ -30,6 +30,11 @@ const usuarios = [
   { nombre: 'Javiera Núñez', correo: 'javiera.nunez@alumnos.cl', carrera: 'Fonoaudiología' },
   { nombre: 'Tomás Herrera', correo: 'tomas.herrera@alumnos.cl', carrera: 'Kinesiología' },
   { nombre: 'Estudiante Demo', correo: 'demo@alumnos.cl', carrera: 'Ingeniería en Computación' },
+  // Las cuentas del Grupo 10, para probar y para la demostración: existen siempre, aunque se
+  // reinicie la base. Correos ficticios (no son los reales de cada integrante).
+  { nombre: 'Lucas Maulén', correo: 'lucas.maulen@alumnos.cl' },
+  { nombre: 'Matías Catalán', correo: 'matias.catalan@alumnos.cl' },
+  { nombre: 'Juan Soto', correo: 'juan.soto@alumnos.cl' },
 ];
 
 const productos = [
