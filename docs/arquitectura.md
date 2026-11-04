@@ -201,8 +201,8 @@ Decisiones:
 | POST 🔒 | `/productos` | Publicar (multipart, con imagen opcional) | HU-05 | ✅ |
 | PATCH 🔒 | `/productos/:id` | Editar lo propio; `estado` solo activo o pausado | HU-05 | ✅ |
 | DELETE 🔒 | `/productos/:id` | Eliminar lo propio (se archiva si tiene pedidos) | HU-05 | ✅ |
-| GET | `/productos` | Catálogo: `q`, `categoria`, `precioMin`, `precioMax`, `orden`, `pagina` | HU-06 | |
-| GET | `/productos/:id` | Detalle con datos del vendedor | HU-06 | |
+| GET | `/productos` | Catálogo: `q`, `categoria`, `precioMin`, `precioMax`, `orden`, `pagina` (12 por página, solo activos) | HU-06 | ✅ |
+| GET | `/productos/:id` | Detalle con datos del vendedor (incluye pausados y agotados) | HU-06 | ✅ |
 | GET 🔒 | `/sugerencias/producto?titulo=` | Autocompletar con Mercado Libre | HU-08 | |
 | GET · POST · DELETE 🔒 | `/favoritos`, `/favoritos/:productoId` | Favoritos | HU-09 | |
 | GET · POST · PATCH · DELETE 🔒 | `/carrito`, `/carrito/items/:productoId` | Carrito con tope de stock | HU-10 | |

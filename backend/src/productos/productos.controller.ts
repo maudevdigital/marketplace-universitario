@@ -7,6 +7,7 @@ import {
   Param,
   Patch,
   Post,
+  Query,
   UploadedFile,
   UseGuards,
   UseInterceptors,
@@ -28,6 +29,7 @@ import {
 import { GuardiaSesion, UsuarioActual, UsuarioSesion } from '../auth/sesion';
 import { IdPipe } from '../comun/id.pipe';
 import { opcionesImagen } from '../comun/imagenes';
+import { FiltrosCatalogoDto } from './dto/catalogo.dto';
 import { ActualizarProductoDto, CrearProductoDto } from './dto/producto.dto';
 import { ProductosService } from './productos.service';
 
@@ -48,7 +50,7 @@ const ejemploProducto = {
 };
 
 // HU-05 (Lucas): publicar, editar, eliminar y «mis publicaciones».
-// HU-06 (Matías) agrega aquí GET /productos (catálogo con filtros) y GET /productos/:id.
+// HU-06 (Matías): GET /productos (catálogo con filtros) y GET /productos/:id, sin candado.
 // Importante: GET 'mios' tiene que quedar declarado ANTES que GET ':id',
 // o Nest intentará leer «mios» como un número.
 // Las rutas de esta historia llevan candado una por una (@Autenticado), porque las de
@@ -71,6 +73,24 @@ export class ProductosController {
   @ApiOkResponse({ schema: { example: [ejemploProducto] } })
   mios(@UsuarioActual() usuario: UsuarioSesion) {
     return this.productos.misPublicaciones(usuario.id);
+  }
+
+  @Get()
+  @ApiOperation({ summary: 'Catálogo público de publicaciones activas, con búsqueda, filtros y páginas' })
+  @ApiOkResponse({
+    schema: { example: { productos: [ejemploProducto], total: 1, pagina: 1, porPagina: 12, totalPaginas: 1 } },
+  })
+  @ApiBadRequestResponse({ description: 'Filtros inválidos (por ejemplo, precio mínimo mayor que el máximo)' })
+  catalogo(@Query() filtros: FiltrosCatalogoDto) {
+    return this.productos.catalogo(filtros);
+  }
+
+  @Get(':id')
+  @ApiOperation({ summary: 'Detalle público de una publicación, con los datos del vendedor' })
+  @ApiOkResponse({ schema: { example: ejemploProducto } })
+  @ApiNotFoundResponse({ description: 'La publicación no existe o fue eliminada' })
+  detalle(@Param('id', IdPipe) id: number) {
+    return this.productos.detalle(id);
   }
 
   @Post()

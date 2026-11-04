@@ -9,7 +9,8 @@ export function crearTuberiaValidacion() {
     whitelist: true,
     forbidNonWhitelisted: true,
     transform: true,
-    exceptionFactory: (errores) => new BadRequestException(mensajes(errores)),
+    // Sin repetir: «abc» como categoría rompe dos reglas que dicen lo mismo.
+    exceptionFactory: (errores) => new BadRequestException([...new Set(mensajes(errores))]),
   });
 }
 
