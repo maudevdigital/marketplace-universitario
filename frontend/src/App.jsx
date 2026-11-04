@@ -3,11 +3,13 @@ import Layout from './components/Layout';
 import RutaProtegida from './components/RutaProtegida';
 import Carrito from './pages/Carrito';
 import Catalogo from './pages/Catalogo';
+import DetallePedido from './pages/DetallePedido';
 import DetalleProducto from './pages/DetalleProducto';
 import EditarProducto from './pages/EditarProducto';
 import Favoritos from './pages/Favoritos';
 import Ingreso from './pages/Ingreso';
 import Inicio from './pages/Inicio';
+import ListaPedidos from './pages/ListaPedidos';
 import MisPublicaciones from './pages/MisPublicaciones';
 import NoEncontrada from './pages/NoEncontrada';
 import PerfilVendedor from './pages/PerfilVendedor';
@@ -34,6 +36,9 @@ export default function App() {
         <Route path="mis-publicaciones" element={<RutaProtegida><MisPublicaciones /></RutaProtegida>} />
         <Route path="favoritos" element={<RutaProtegida><Favoritos /></RutaProtegida>} />
         <Route path="carrito" element={<RutaProtegida><Carrito /></RutaProtegida>} />
+        <Route path="pedidos" element={<RutaProtegida><ListaPedidos key="comprador" rol="comprador" /></RutaProtegida>} />
+        <Route path="ventas" element={<RutaProtegida><ListaPedidos key="vendedor" rol="vendedor" /></RutaProtegida>} />
+        <Route path="pedidos/:id" element={<RutaProtegida><DetallePedido /></RutaProtegida>} />
         <Route path="productos/:id/editar" element={<RutaProtegida><EditarProducto /></RutaProtegida>} />
         <Route path="usuarios/:id" element={<PerfilVendedor />} />
         <Route path="*" element={<NoEncontrada />} />

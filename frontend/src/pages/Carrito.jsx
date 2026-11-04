@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import Cargando from '../components/Cargando';
 import EstadoVacio from '../components/EstadoVacio';
 import MensajeError from '../components/MensajeError';
@@ -7,10 +7,13 @@ import useAvisos from '../hooks/useAvisos';
 import usePeticion from '../hooks/usePeticion';
 import { urlImagen } from '../services/api';
 import { cambiarCantidad, obtenerCarrito, quitarDelCarrito, vaciarCarrito } from '../services/carrito';
+import { comprarCarrito } from '../services/pedidos';
 import { formatearPrecio } from '../utils/formato';
 
 // Carrito (HU-10). Cada acción devuelve el carrito actualizado y la pantalla lo reemplaza entero.
+// Confirmar la compra (HU-11) crea un pedido por vendedor y lleva a «Mis pedidos».
 export default function Carrito() {
+  const navegar = useNavigate();
   const { mostrarAviso } = useAvisos();
   const { datos: carrito, cargando, error, recargar, setDatos } = usePeticion(obtenerCarrito);
   const [ocupado, setOcupado] = useState(null);
@@ -24,6 +27,23 @@ export default function Carrito() {
       mostrarAviso(problema.message, 'error');
       recargar(); // el stock pudo cambiar: se muestra lo que hay de verdad
     } finally {
+      setOcupado(null);
+    }
+  };
+
+  const comprar = async () => {
+    setOcupado('comprar');
+    try {
+      const pedidos = await comprarCarrito();
+      mostrarAviso(
+        pedidos.length === 1 ? 'Compra confirmada: se creó tu pedido.' : `Compra confirmada: se crearon ${pedidos.length} pedidos.`,
+        'exito',
+      );
+      navegar('/pedidos', { state: { nuevos: pedidos.map((pedido) => pedido.id) } });
+    } catch (problema) {
+      // 409: alguien compró antes o cambió el stock. Nada se cobró; se recarga el carrito para ver qué pasó.
+      mostrarAviso(problema.message, 'error');
+      recargar();
       setOcupado(null);
     }
   };
@@ -88,6 +108,13 @@ export default function Carrito() {
                   Compras a {carrito.pedidosAGenerar} vendedores: se creará un pedido para cada uno.
                 </p>
               )}
+              <button type="button" className="btn btn-primary w-100" disabled={!carrito.sePuedeComprar || ocupado !== null} onClick={comprar}>
+                <i className="bi bi-bag-check me-2" aria-hidden="true" />
+                {ocupado === 'comprar' ? 'Confirmando…' : 'Confirmar compra'}
+              </button>
+              <p className="small text-muted mt-2 mb-0">
+                El stock se reserva al confirmar. El pago se hace después, desde cada pedido.
+              </p>
             </div>
           </div>
         </aside>
