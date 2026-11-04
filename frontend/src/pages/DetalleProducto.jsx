@@ -73,6 +73,15 @@ export default function DetalleProducto() {
             <dd className="col-8">{producto.stock} {producto.stock === 1 ? 'unidad' : 'unidades'}</dd>
           </dl>
 
+          {esPropio && (
+            <div className="d-flex flex-wrap gap-2 mb-3">
+              <Link to={`/productos/${producto.id}/editar`} className="btn btn-outline-primary">
+                <i className="bi bi-pencil me-1" aria-hidden="true" />Editar publicación
+              </Link>
+              <Link to="/mis-publicaciones" className="btn btn-outline-secondary">Mis publicaciones</Link>
+            </div>
+          )}
+
           <h2 className="h6">Descripción</h2>
           <p className="descripcion-producto">{producto.descripcion}</p>
 

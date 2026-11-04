@@ -1,11 +1,15 @@
 import { Route, Routes } from 'react-router-dom';
 import Layout from './components/Layout';
+import RutaProtegida from './components/RutaProtegida';
 import Catalogo from './pages/Catalogo';
 import DetalleProducto from './pages/DetalleProducto';
+import EditarProducto from './pages/EditarProducto';
 import Ingreso from './pages/Ingreso';
 import Inicio from './pages/Inicio';
+import MisPublicaciones from './pages/MisPublicaciones';
 import NoEncontrada from './pages/NoEncontrada';
 import PerfilVendedor from './pages/PerfilVendedor';
+import Publicar from './pages/Publicar';
 import Registro from './pages/Registro';
 
 // Mapa de navegación. Cada historia agrega su ruta aquí; las que necesitan sesión
@@ -24,6 +28,9 @@ export default function App() {
         <Route path="registro" element={<Registro />} />
         <Route path="catalogo" element={<Catalogo />} />
         <Route path="productos/:id" element={<DetalleProducto />} />
+        <Route path="publicar" element={<RutaProtegida><Publicar /></RutaProtegida>} />
+        <Route path="mis-publicaciones" element={<RutaProtegida><MisPublicaciones /></RutaProtegida>} />
+        <Route path="productos/:id/editar" element={<RutaProtegida><EditarProducto /></RutaProtegida>} />
         <Route path="usuarios/:id" element={<PerfilVendedor />} />
         <Route path="*" element={<NoEncontrada />} />
       </Route>
