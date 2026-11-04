@@ -1,6 +1,7 @@
 import { ApiPropertyOptional } from '@nestjs/swagger';
-import { Transform, Type } from 'class-transformer';
+import { Transform } from 'class-transformer';
 import { IsIn, IsInt, IsOptional, IsString, Max, MaxLength, Min } from 'class-validator';
+import { numeroOpcional } from '../../comun/transformaciones';
 
 export const ORDENES_CATALOGO = ['recientes', 'precio_asc', 'precio_desc'] as const;
 export type OrdenCatalogo = (typeof ORDENES_CATALOGO)[number];
@@ -26,24 +27,21 @@ export class FiltrosCatalogoDto {
 
   @ApiPropertyOptional({ example: 2, description: 'Identificador de la categoría' })
   @IsOptional()
-  @Transform(textoOpcional)
-  @Type(() => Number)
+  @Transform(numeroOpcional)
   @IsInt({ message: 'La categoría no es válida.' })
   @Min(1, { message: 'La categoría no es válida.' })
   categoria?: number;
 
   @ApiPropertyOptional({ example: 5000 })
   @IsOptional()
-  @Transform(textoOpcional)
-  @Type(() => Number)
+  @Transform(numeroOpcional)
   @IsInt({ message: 'El precio mínimo debe ser un número entero.' })
   @Min(0, { message: 'El precio mínimo no puede ser negativo.' })
   precioMin?: number;
 
   @ApiPropertyOptional({ example: 50000 })
   @IsOptional()
-  @Transform(textoOpcional)
-  @Type(() => Number)
+  @Transform(numeroOpcional)
   @IsInt({ message: 'El precio máximo debe ser un número entero.' })
   @Min(0, { message: 'El precio máximo no puede ser negativo.' })
   precioMax?: number;
@@ -56,8 +54,7 @@ export class FiltrosCatalogoDto {
 
   @ApiPropertyOptional({ example: 1, default: 1 })
   @IsOptional()
-  @Transform(textoOpcional)
-  @Type(() => Number)
+  @Transform(numeroOpcional)
   @IsInt({ message: 'La página debe ser un número entero.' })
   @Min(1, { message: 'La página debe ser 1 o mayor.' })
   @Max(10_000, { message: 'La página no es válida.' })

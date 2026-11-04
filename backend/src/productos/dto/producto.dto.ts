@@ -1,7 +1,8 @@
 import { ApiProperty, ApiPropertyOptional, OmitType, PartialType } from '@nestjs/swagger';
 import { CondicionProducto } from '@prisma/client';
-import { Transform, Type } from 'class-transformer';
+import { Transform } from 'class-transformer';
 import { IsEnum, IsIn, IsInt, IsOptional, IsString, Length, Max, MaxLength, Min } from 'class-validator';
+import { numeroOpcional } from '../../comun/transformaciones';
 
 // Los formularios con imagen llegan como multipart: todo viene como texto.
 // Estas transformaciones recortan espacios y convierten "" en «sin valor».
@@ -25,20 +26,20 @@ export class CrearProductoDto {
   descripcion: string;
 
   @ApiProperty({ example: 2, description: 'Identificador de la categoría (GET /categorias)' })
-  @Type(() => Number)
+  @Transform(numeroOpcional)
   @IsInt({ message: 'La categoría no es válida.' })
   @Min(1, { message: 'La categoría no es válida.' })
   categoriaId: number;
 
   @ApiProperty({ example: 18000, description: 'Pesos chilenos, sin decimales' })
-  @Type(() => Number)
+  @Transform(numeroOpcional)
   @IsInt({ message: 'El precio debe ser un número entero.' })
   @Min(1, { message: 'El precio debe ser mayor que cero.' })
   @Max(100_000_000, { message: 'El precio no puede superar los $100.000.000.' })
   precio: number;
 
   @ApiProperty({ example: 1 })
-  @Type(() => Number)
+  @Transform(numeroOpcional)
   @IsInt({ message: 'El stock debe ser un número entero.' })
   @Min(1, { message: 'Para publicar, el stock debe ser al menos 1.' })
   @Max(999, { message: 'El stock no puede superar las 999 unidades.' })
@@ -72,7 +73,7 @@ export class CrearProductoDto {
 export class ActualizarProductoDto extends PartialType(OmitType(CrearProductoDto, ['stock'] as const)) {
   @ApiPropertyOptional({ example: 0, description: 'Con 0 la publicación pasa a «agotado»' })
   @IsOptional()
-  @Type(() => Number)
+  @Transform(numeroOpcional)
   @IsInt({ message: 'El stock debe ser un número entero.' })
   @Min(0, { message: 'El stock no puede ser negativo.' })
   @Max(999, { message: 'El stock no puede superar las 999 unidades.' })
