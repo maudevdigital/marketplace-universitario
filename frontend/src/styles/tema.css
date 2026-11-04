@@ -1,0 +1,256 @@
+/* Identidad visual de UniMarket: la misma paleta de la Actividad Evaluada 1.
+   Regla del equipo: nada de colores escritos a mano en los componentes; siempre var(--…),
+   así el tema oscuro funciona solo. Cada historia puede agregar su propio archivo de estilos. */
+
+:root {
+  --color-primary: #6366f1;
+  --color-primary-dark: #4f46e5;
+  --color-primary-light: #818cf8;
+  --color-secundary: #10b981;
+  --color-danger: #ef4444;
+  --color-warning: #f59e0b;
+
+  --color-bg: #ffffff;
+  --color-text: #1f2937;
+  --color-text-muted: #6b7280;
+  --color-border: #e5e7eb;
+  --color-bg-light: #f9fafb;
+  --color-bg-dark: #111827;
+  --color-footer-text: #f9fafb;
+
+  --font-family-base: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
+
+  /* Bootstrap toma el color principal de estas variables */
+  --bs-primary: var(--color-primary);
+  --bs-primary-rgb: 99, 102, 241;
+  --bs-link-color: var(--color-primary-dark);
+  --bs-link-hover-color: var(--color-primary);
+  --bs-body-font-family: var(--font-family-base);
+}
+
+[data-tema='oscuro'] {
+  --color-bg: #1f2937;
+  --color-text: #f3f4f6;
+  --color-text-muted: #9ca3af;
+  --color-border: #374151;
+  --color-bg-light: #111827;
+  --bs-link-color: var(--color-primary-light);
+  --bs-body-bg: var(--color-bg);
+  --bs-body-color: var(--color-text);
+  --bs-secondary-color: var(--color-text-muted);
+  --bs-border-color: var(--color-border);
+}
+
+body {
+  font-family: var(--font-family-base);
+  color: var(--color-text);
+  background-color: var(--color-bg);
+  transition: background-color 0.3s ease, color 0.3s ease;
+  line-height: 1.6;
+}
+
+.text-muted {
+  color: var(--color-text-muted) !important;
+}
+
+/* Foco visible para quien navega con teclado */
+:focus-visible {
+  outline: 3px solid var(--color-primary-light);
+  outline-offset: 2px;
+}
+
+/* Botones con la paleta propia en vez del azul de Bootstrap */
+.btn-primary {
+  --bs-btn-bg: var(--color-primary);
+  --bs-btn-border-color: var(--color-primary);
+  --bs-btn-hover-bg: var(--color-primary-dark);
+  --bs-btn-hover-border-color: var(--color-primary-dark);
+  --bs-btn-active-bg: var(--color-primary-dark);
+  --bs-btn-disabled-bg: var(--color-primary-light);
+  --bs-btn-disabled-border-color: var(--color-primary-light);
+}
+
+.btn-outline-primary {
+  --bs-btn-color: var(--color-primary);
+  --bs-btn-border-color: var(--color-primary);
+  --bs-btn-hover-bg: var(--color-primary);
+  --bs-btn-hover-border-color: var(--color-primary);
+  --bs-btn-active-bg: var(--color-primary-dark);
+}
+
+[data-tema='oscuro'] .btn-outline-primary {
+  --bs-btn-color: var(--color-primary-light);
+  --bs-btn-border-color: var(--color-primary-light);
+}
+
+/* Barra superior */
+.navbar {
+  background-color: var(--color-bg);
+  border-color: var(--color-border) !important;
+  box-shadow: var(--shadow-sm);
+}
+
+.navbar-brand {
+  color: var(--color-primary) !important;
+  font-size: 1.4rem;
+}
+
+.navbar .nav-link {
+  color: var(--color-text);
+  font-weight: 500;
+}
+
+.navbar .nav-link.active {
+  color: var(--color-primary);
+}
+
+.texto-usuario {
+  color: var(--color-text);
+}
+
+/* Portada */
+.portada {
+  background: linear-gradient(135deg, var(--color-primary-dark), var(--color-primary));
+  color: #ffffff;
+}
+
+/* Tarjetas */
+.card {
+  background-color: var(--color-bg);
+  border-color: var(--color-border);
+  color: var(--color-text);
+}
+
+.tarjeta-categoria,
+.tarjeta-producto {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.tarjeta-categoria:hover,
+.tarjeta-producto:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-lg);
+}
+
+.icono-categoria {
+  font-size: 2rem;
+  color: var(--color-primary);
+}
+
+.tarjeta-producto .card-img-top {
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  background-color: var(--color-bg-light);
+}
+
+.titulo-producto {
+  color: var(--color-text);
+}
+
+.etiqueta-categoria {
+  color: var(--color-primary-dark) !important;
+  background-color: var(--color-bg-light) !important;
+}
+
+[data-tema='oscuro'] .etiqueta-categoria {
+  color: var(--color-primary-light) !important;
+}
+
+.precio {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--color-secundary);
+}
+
+/* Estados de pantalla: cargando, error y vacío */
+.estado-pantalla {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 3rem 1rem;
+}
+
+.estado-icono {
+  font-size: 2.75rem;
+}
+
+/* Formularios cortos (ingreso y registro) */
+.formulario-angosto {
+  max-width: 440px;
+}
+
+.form-control,
+.form-select {
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  border-color: var(--color-border);
+}
+
+/* Perfil */
+.avatar {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: #ffffff;
+  background-color: var(--color-primary);
+  flex-shrink: 0;
+}
+
+/* Avisos flotantes */
+.avisos {
+  position: fixed;
+  top: 1rem;
+  right: 1rem;
+  z-index: 1080;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  width: min(360px, calc(100vw - 2rem));
+}
+
+.aviso {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.75rem 1rem;
+  border-radius: 0.5rem;
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  border: 1px solid var(--color-border);
+  border-left-width: 4px;
+  box-shadow: var(--shadow-lg);
+  animation: aparecer 0.2s ease-out;
+}
+
+.aviso-exito { border-left-color: var(--color-secundary); }
+.aviso-exito i { color: var(--color-secundary); }
+.aviso-error { border-left-color: var(--color-danger); }
+.aviso-error i { color: var(--color-danger); }
+.aviso-info { border-left-color: var(--color-primary); }
+.aviso-info i { color: var(--color-primary); }
+
+@keyframes aparecer {
+  from { opacity: 0; transform: translateY(-8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Pie */
+.pie {
+  background-color: var(--color-bg-dark);
+  color: var(--color-footer-text);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    transition: none !important;
+    animation: none !important;
+  }
+}
