@@ -185,6 +185,12 @@ Decisiones:
 3. Es lo que más crece y no necesita claves foráneas estrictas.
 4. **No duplica PostgreSQL**: no existe tabla de mensajes. Solo se copia `productoTitulo` para mostrar la bandeja sin consultar la otra base.
 
+**Cómo se usa (HU-13):** al preguntar se hace un solo `findOneAndUpdate` con `upsert` (crea la
+conversación o le agrega el mensaje); la bandeja y el contador de no leídos los calcula MongoDB con
+agregaciones (`$filter`, `$last`, `$unwind`, `$count`), sin traer todos los mensajes; al abrir una
+conversación, un `updateOne` con `arrayFilters` marca como leídos solo los mensajes de la otra persona.
+Los nombres de las personas se leen de PostgreSQL en el momento: no se copian a MongoDB.
+
 ## 4. Endpoints
 
 🔒 = necesita `Authorization: Bearer <token>`. Errores siempre como `{ "estado": 409, "mensaje": "…" }`.
@@ -203,7 +209,7 @@ Decisiones:
 | DELETE 🔒 | `/productos/:id` | Eliminar lo propio (se archiva si tiene pedidos) | HU-05 | ✅ |
 | GET | `/productos` | Catálogo: `q`, `categoria`, `precioMin`, `precioMax`, `orden`, `pagina` (12 por página, solo activos) | HU-06 | ✅ |
 | GET | `/productos/:id` | Detalle con datos del vendedor (incluye pausados y agotados) | HU-06 | ✅ |
-| GET 🔒 | `/sugerencias/producto?titulo=` | Autocompletar con Mercado Libre | HU-08 | |
+| GET 🔒 | `/sugerencias/producto?titulo=` | Sugerir con Mercado Libre la categoría nuestra (por tipo de producto o por categoría principal; si nada calza, «Otros»), la marca y el modelo (la respuesta queda una hora en memoria; 503 si Mercado Libre no responde) | HU-08 | ✅ |
 | GET · POST · DELETE 🔒 | `/favoritos`, `/favoritos/:productoId` | Favoritos (marcar y quitar se pueden repetir sin error) | HU-09 | ✅ |
 | GET · DELETE 🔒 | `/carrito` | Ver el carrito (cada ítem trae `problema` si hoy no se puede comprar) y vaciarlo | HU-10 | ✅ |
 | POST 🔒 | `/carrito/items` | Agregar `{ productoId, cantidad }`: suma a lo que había, sin pasar el stock | HU-10 | ✅ |
@@ -213,7 +219,11 @@ Decisiones:
 | POST 🔒 | `/pedidos/:id/pago` | Pago simulado `{ numeroTarjeta, titular, vencimiento, cvv }`; solo el comprador y solo si está pendiente | HU-12 | ✅ |
 | POST 🔒 | `/pedidos/:id/entrega` | El vendedor marca entregado un pedido pagado | HU-12 | ✅ |
 | POST 🔒 | `/pedidos/:id/cancelacion` | Comprador o vendedor cancelan un pedido pendiente o pagado | HU-12 | ✅ |
-| GET · POST 🔒 | `/conversaciones`, `/conversaciones/:id`, `/conversaciones/:id/mensajes` | Mensajes | HU-13 | |
+| GET 🔒 | `/conversaciones` | Bandeja: mis conversaciones como comprador y vendedor, con el último mensaje y los no leídos | HU-13 | ✅ |
+| GET 🔒 | `/conversaciones/no-leidos` | Total de mensajes sin leer (el número rojo del menú) | HU-13 | ✅ |
+| POST 🔒 | `/conversaciones` | Preguntar por un producto `{ productoId, texto }`; si ya había conversación, se suma a la misma | HU-13 | ✅ |
+| GET 🔒 | `/conversaciones/:id` | Abrir una conversación (marca como leídos los mensajes recibidos) | HU-13 | ✅ |
+| POST 🔒 | `/conversaciones/:id/mensajes` | Responder `{ texto }` | HU-13 | ✅ |
 
 Códigos: 400 datos inválidos · 401 sin sesión · 403 no es el dueño · 404 no existe ·
 409 conflicto de stock o de estado · 422 regla de negocio (por ejemplo, comprar lo propio) ·
@@ -228,10 +238,13 @@ Códigos: 400 datos inválidos · 401 sin sesión · 403 no es el dueño · 404 
 | Publicar exige stock ≥ 1, precio > 0 y descripción de 20 caracteres o más | `CrearProductoDto` | 400 ✅ |
 | No se compra más que el stock (en el carrito y de nuevo al comprar) | `CarritoService`, `PedidosService` | 409 ✅ |
 | El stock se descuenta en una transacción: si un producto falla, no se crea ningún pedido | `PedidosService` | 409 ✅ |
-| Nadie compra ni pregunta por su propio producto | Carrito ✅, pedidos ✅, conversaciones | 422 |
+| Nadie compra ni pregunta por su propio producto | `CarritoService`, `PedidosService`, `ConversacionesService` | 422 ✅ |
 | Estados: pendiente → pagado → entregado; cancelado solo desde pendiente o pagado | `PagosService` | 409 ✅ |
 | Cancelar devuelve el stock y reactiva lo agotado (lo pausado sigue pausado) | `PagosService` | ✅ |
 | Pago simulado: `4242 4242 4242 4242` se aprueba, `4000 0000 0000 0002` se rechaza (queda registrado y se puede reintentar); otra tarjeta es 400 | `PagosService` | 402 ✅ |
 | Solo el comprador paga y solo el vendedor marca la entrega | `PagosService` | 403 ✅ |
 | Dos compras o pagos simultáneos: el cambio se aplica «solo si sigue en el estado esperado», así uno gana y el otro recibe 409 | `PedidosService`, `PagosService` | 409 ✅ |
 | Los datos de la tarjeta se validan pero nunca se guardan | `PagarPedidoDto` | — |
+| Una sola conversación por producto y comprador (índice único en MongoDB) | `ConversacionesService` | — ✅ |
+| Solo el comprador y el vendedor leen y responden su conversación | `ConversacionesService` | 403 ✅ |
+| Si Mercado Libre falla o tarda más de 4 segundos, la publicación sigue a mano | `SugerenciasService` | 503 ✅ |
