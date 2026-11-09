@@ -327,10 +327,10 @@ oscuro y en pantalla angosta. Las capturas están en [docs/capturas/](docs/captu
 
 ## Uso de inteligencia artificial
 
-Usamos **Claude Code** durante todo el hito. Nos ayudó a analizar el enunciado y a tomar decisiones,
-y generó la mayor parte del código, las pruebas y la documentación a partir de nuestras
-instrucciones. Nosotros definimos el alcance y el reparto, probamos la página en el navegador,
-detectamos errores y decidimos qué se quedaba y qué no.
+Usamos **Claude Code** como herramienta de apoyo durante todo el hito: para analizar el enunciado,
+proponer el diseño, escribir y corregir código, preparar pruebas y documentación, siempre a partir de
+nuestras instrucciones. Cada resultado lo revisamos, lo probamos en el navegador y decidimos si se
+quedaba: nosotros definimos el alcance y el reparto, detectamos errores y descartamos lo que no servía.
 
 | Etapa | Herramienta | Propósito | Prompt de ejemplo | Resultado | Validación humana | Aprendizaje |
 |---|---|---|---|---|---|---|
