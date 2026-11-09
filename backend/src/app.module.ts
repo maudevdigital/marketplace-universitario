@@ -10,6 +10,8 @@ import { ProductosModule } from './productos/productos.module';
 import { FavoritosModule } from './favoritos/favoritos.module';
 import { CarritoModule } from './carrito/carrito.module';
 import { PedidosModule } from './pedidos/pedidos.module';
+import { SugerenciasModule } from './sugerencias/sugerencias.module';
+import { ConversacionesModule } from './conversaciones/conversaciones.module';
 
 // Cada integrante agrega aquí el módulo de su historia (favoritos, carrito, pedidos,
 // conversaciones, sugerencias…), siempre en su propia carpeta dentro de src/.
@@ -25,6 +27,8 @@ import { PedidosModule } from './pedidos/pedidos.module';
     FavoritosModule,
     CarritoModule,
     PedidosModule,
+    SugerenciasModule,
+    ConversacionesModule,
   ],
   controllers: [SaludController],
 })

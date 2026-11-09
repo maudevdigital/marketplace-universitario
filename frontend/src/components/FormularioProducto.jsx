@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import usePeticion from '../hooks/usePeticion';
 import { urlImagen } from '../services/api';
 import { listarCategorias } from '../services/categorias';
+import SugerenciaProducto from './SugerenciaProducto';
 
 const TIPOS_IMAGEN = ['image/jpeg', 'image/png', 'image/webp'];
 const TAMANO_MAXIMO = 2 * 1024 * 1024;
@@ -127,11 +128,17 @@ export default function FormularioProducto({ producto, alEnviar, textoBoton }) {
 
       <div className="row g-3">
         <div className="col-12">
-          {/* HU-08 (Juan) agrega aquí las sugerencias de Mercado Libre mientras se escribe el título. */}
           <label htmlFor="titulo" className="form-label">Título</label>
           <input {...campo('titulo')} type="text" maxLength={120} className={clase('titulo')}
             placeholder="Por ejemplo: Calculadora Casio fx-570" />
           {error('titulo')}
+          {/* HU-08: sugerencias de Mercado Libre mientras se escribe (solo al publicar, no al editar) */}
+          {!esEdicion && (
+            <SugerenciaProducto
+              titulo={valores.titulo}
+              alAplicar={(cambios) => setValores((actuales) => ({ ...actuales, ...cambios }))}
+            />
+          )}
         </div>
 
         <div className="col-12">

@@ -1,0 +1,31 @@
+/* HU-08: aviso de sugerencias de Mercado Libre bajo el título del producto */
+.sugerencia {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-top: 0.5rem;
+  padding: 0.6rem 0.8rem;
+  border-radius: 0.5rem;
+  border: 1px dashed var(--color-border);
+  background-color: var(--color-bg-light);
+  color: var(--color-text);
+}
+
+.sugerencia-lista {
+  flex-wrap: wrap;
+  justify-content: space-between;
+  border-style: solid;
+  border-color: var(--color-primary-light);
+}
+
+.sugerencia-lista .bi-stars {
+  color: var(--color-primary);
+}
+
+.sugerencia-aviso {
+  border-color: var(--color-warning);
+}
+
+.sugerencia-aviso .bi {
+  color: var(--color-warning);
+}

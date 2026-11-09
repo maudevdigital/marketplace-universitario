@@ -10,7 +10,9 @@
     "start:prod": "node dist/main.js",
     "prisma:generate": "prisma generate",
     "prisma:migrate": "prisma migrate deploy",
-    "prisma:seed": "prisma db seed"
+    "prisma:seed": "prisma db seed",
+    "test": "jest",
+    "test:api": "node --test --test-concurrency=1 \"test/api/*.test.mjs\""
   },
   "prisma": {
     "seed": "node prisma/seed.js"
@@ -37,11 +39,27 @@
     "@nestjs/cli": "^11.0.10",
     "@nestjs/schematics": "^11.0.7",
     "@types/express": "^5.0.3",
+    "@types/jest": "^30.0.0",
     "@types/multer": "^2.0.0",
     "@types/node": "^22.18.0",
+    "jest": "^30.5.2",
+    "ts-jest": "^29.4.15",
     "typescript": "^5.9.2"
   },
   "allowScripts": {
     "@prisma/engines@6.19.3": true
+  },
+  "jest": {
+    "testEnvironment": "node",
+    "rootDir": ".",
+    "testRegex": "test/unitarias/.*\\.spec\\.ts$",
+    "transform": {
+      "^.+\\.ts$": [
+        "ts-jest",
+        {
+          "tsconfig": "tsconfig.test.json"
+        }
+      ]
+    }
   }
 }

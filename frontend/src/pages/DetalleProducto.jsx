@@ -3,6 +3,7 @@ import AgregarAlCarrito from '../components/AgregarAlCarrito';
 import BotonFavorito from '../components/BotonFavorito';
 import Cargando from '../components/Cargando';
 import MensajeError from '../components/MensajeError';
+import PreguntarVendedor from '../components/PreguntarVendedor';
 import usePeticion from '../hooks/usePeticion';
 import useSesion from '../hooks/useSesion';
 import { urlImagen } from '../services/api';
@@ -79,6 +80,8 @@ export default function DetalleProducto() {
           <div className="d-flex flex-wrap gap-2 mb-3">
             <BotonFavorito producto={producto} conTexto />
           </div>
+          {/* HU-13: preguntar al vendedor (no aparece en los productos propios) */}
+          <PreguntarVendedor producto={producto} />
 
           {esPropio && (
             <div className="d-flex flex-wrap gap-2 mb-3">

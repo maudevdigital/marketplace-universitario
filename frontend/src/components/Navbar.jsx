@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { Link, NavLink, useNavigate } from 'react-router-dom';
 import useAvisos from '../hooks/useAvisos';
+import useMensajesNoLeidos from '../hooks/useMensajesNoLeidos';
 import useSesion from '../hooks/useSesion';
 import useTema from '../hooks/useTema';
 
@@ -15,6 +16,7 @@ const ENLACES_CON_SESION = [
   { ruta: '/publicar', texto: 'Publicar', icono: 'plus-circle' },
   { ruta: '/favoritos', texto: 'Favoritos', icono: 'heart' },
   { ruta: '/carrito', texto: 'Carrito', icono: 'cart' },
+  { ruta: '/mensajes', texto: 'Mensajes', icono: 'chat-dots' },
 ];
 const MENU_USUARIO = [
   { ruta: '/mis-publicaciones', texto: 'Mis publicaciones', icono: 'shop-window' },
@@ -28,6 +30,7 @@ export default function Navbar() {
   const { mostrarAviso } = useAvisos();
   const navegar = useNavigate();
   const [abierto, setAbierto] = useState(false);
+  const noLeidos = useMensajesNoLeidos(usuario);
 
   const cerrarSesion = () => {
     salir();
@@ -60,9 +63,16 @@ export default function Navbar() {
             <ul className="navbar-nav me-auto">
               {enlaces.map((enlace) => (
                 <li className="nav-item" key={enlace.ruta}>
-                  <NavLink className="nav-link" to={enlace.ruta} end onClick={() => setAbierto(false)}>
+                  <NavLink className="nav-link" to={enlace.ruta} end={enlace.ruta !== '/mensajes'} onClick={() => setAbierto(false)}>
                     <i className={`bi bi-${enlace.icono} me-1`} aria-hidden="true" />
                     {enlace.texto}
+                    {/* HU-13: mensajes sin leer */}
+                    {enlace.ruta === '/mensajes' && noLeidos > 0 && (
+                      <span className="badge rounded-pill text-bg-danger ms-1">
+                        {noLeidos}
+                        <span className="visually-hidden"> sin leer</span>
+                      </span>
+                    )}
                   </NavLink>
                 </li>
               ))}

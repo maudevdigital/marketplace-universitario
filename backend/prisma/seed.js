@@ -6,6 +6,7 @@
 
 const { PrismaClient } = require('@prisma/client');
 const bcrypt = require('bcryptjs');
+const { cargarEquivalencias } = require('./equivalencias');
 
 const prisma = new PrismaClient();
 const CLAVE_PRUEBA = 'Clave1234';
@@ -16,6 +17,10 @@ const categorias = [
   { nombre: 'Accesorios', icono: 'backpack' },
   { nombre: 'Instrumentos', icono: 'music-note-beamed' },
   { nombre: 'Deportes', icono: 'bicycle' },
+  // HU-08: tres más para que todo lo que reconoce Mercado Libre tenga dónde quedar
+  { nombre: 'Hogar y muebles', icono: 'house-heart' },
+  { nombre: 'Ropa y calzado', icono: 'handbag' },
+  { nombre: 'Otros', icono: 'three-dots' },
 ];
 
 // Los vendedores de la Actividad 1, una cuenta que solo compra y las cuentas del equipo.
@@ -117,6 +122,10 @@ async function main() {
       create: { ...usuario, hashContrasena },
     });
   }
+
+  // HU-08: categorías de Mercado Libre → categorías nuestras (ver prisma/equivalencias.js)
+  const equivalencias = await cargarEquivalencias(prisma);
+  console.log(`Datos iniciales: ${equivalencias} equivalencias de categorías de Mercado Libre.`);
 
   const productosExistentes = await prisma.producto.count();
   if (productosExistentes > 0) {
