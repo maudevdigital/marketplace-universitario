@@ -327,14 +327,19 @@ oscuro y en pantalla angosta. Las capturas están en [docs/capturas/](docs/captu
 
 ## Uso de inteligencia artificial
 
-El enunciado permite usar inteligencia artificial si se reporta y se comprende. Cada integrante anotó
-sus usos mientras trabajaba en [docs/uso-ia.md](docs/uso-ia.md); este es el resumen.
+Usamos **Claude Code** como herramienta de apoyo durante todo el hito: para analizar el enunciado,
+proponer el diseño, escribir y corregir código, preparar pruebas y documentación, siempre a partir de
+nuestras instrucciones. Cada resultado lo revisamos, lo probamos en el navegador y decidimos si se
+quedaba: nosotros definimos el alcance y el reparto, detectamos errores y descartamos lo que no servía.
 
-| Quién | Herramienta | Propósito | Prompt de ejemplo | Resultado | Validación humana | Aprendizaje |
+| Etapa | Herramienta | Propósito | Prompt de ejemplo | Resultado | Validación humana | Aprendizaje |
 |---|---|---|---|---|---|---|
-| Lucas | Claude Code | Diseño, código y pruebas de HU-01 a HU-05 | «Comienza con mi parte del plan: infraestructura, usuarios, base de React y productos» | Backend NestJS, migración, datos iniciales, Docker Compose y base del frontend | _Ver docs/uso-ia.md_ | _Ver docs/uso-ia.md_ |
-| Matías | Claude Code | Código y pruebas de HU-06, HU-07 y HU-09 a HU-12 | «Haz mi parte del proyecto: catálogo, pantallas de publicar, favoritos, carrito, pedidos y pago simulado» | Catálogo, favoritos, carrito, pedidos y pagos con sus pantallas | _Ver docs/uso-ia.md_ | _Ver docs/uso-ia.md_ |
-| Juan | Claude Code | Código, pruebas y documentación de HU-08 y HU-13 a HU-15 | «Haz la parte de Juan: sugerencias de Mercado Libre, mensajes en MongoDB, pruebas y README» | Sugerencias, conversaciones, 75 pruebas automáticas y este README | _Ver docs/uso-ia.md_ | _Ver docs/uso-ia.md_ |
+| Diseño | Claude Code | Análisis y diseño | «Revisa el enunciado del Hito 3 y propón el modelo de datos, la colección de MongoDB y los endpoints del caso 3.4» | Nueve tablas, la colección de conversaciones, la lista de endpoints y un plan por historias | Confirmamos el cambio de caso con el profesor y fijamos el reparto en cadena (35 %, 35 % y 20 %) | Acordar el contrato de datos antes de programar permite que tres personas trabajen sin chocar |
+| API pública | Claude Code | Investigación | «¿Hay alguna API que reconozca cualquier producto y autocomplete la publicación?» | Comparó Open Library, UPCitemdb, eBay y Mercado Libre, y propuso el predictor de Mercado Libre | Descartamos Open Library (solo sirve para libros) y las fotos de catálogo (en un producto usado la foto tiene que ser la real). Al probar «Escritorio» vimos que quedaba sin categoría y pedimos corregirlo | Un servicio externo puede cerrarse: por eso se llama desde el backend y el formulario funciona sin él |
+| Código | Claude Code | Generación de código | «Comienza con mi parte del plan: infraestructura, usuarios, base de React y productos» (uno parecido para cada parte) | Backend en NestJS, pantallas en React, carrito, pedidos, pago simulado y conversaciones | Probamos la página en el navegador, revisamos y aprobamos las correcciones de lo que falló al probar cada parte (filtros vacíos que daban error, el texto «Solo quedan 1 unidad») y pedimos que las cuentas del equipo vinieran creadas | Las reglas de negocio van en el backend; React solo muestra y avisa |
+| Alcance | Claude Code | Revisión contra la rúbrica | «Revisa que lo desarrollado cumpla la rúbrica, sin cosas exageradas» | Detectó que la sugerencia tenía más de lo pedido y que faltaban las historias priorizadas y el mapa de navegación | Aceptamos recortar la sugerencia a categoría, marca y modelo y agregamos [docs/diseno.md](docs/diseno.md) | El enunciado prioriza una solución acotada que cada uno pueda defender |
+| Pruebas | Claude Code | Pruebas | «Escribe pruebas de las reglas de negocio y de los casos de error de toda la API» | 42 pruebas unitarias y 33 contra la API, incluida la compra simultánea de la última unidad | Pedimos no perder los datos de trabajo al probar: las pruebas que crean usuarios corren en una base aparte | Una prueba automática encuentra los errores de dos compras simultáneas, que a mano no se ven |
+| Documentación | Claude Code | Documentación | «Completa el README con todas las secciones que pide el enunciado» | Este README, la arquitectura y el diseño | Pedimos textos y mensajes de commit en palabras simples | Documentar mientras se trabaja cuesta menos que hacerlo al final |
 
 ## Cómo trabajamos
 
