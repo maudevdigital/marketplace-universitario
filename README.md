@@ -332,7 +332,7 @@ escribir y corregir partes del código; todo lo revisamos y probamos antes de in
 
 | Herramienta | Propósito | Prompt de ejemplo | Resultado | Validación humana | Aprendizaje |
 |---|---|---|---|---|---|
-| Claude Code | Orientación | «Revisa el enunciado y propón el modelo de datos» | Propuesta de tablas y endpoints | La ajustamos con el profesor | Diseñar los datos antes de programar |
+| Claude Code | Orientación | «Revisa el enunciado y propón el modelo de datos» | Propuesta de tablas y endpoints | La ajustamos con la clase del profesor | Diseñar los datos antes de programar |
 | Claude Code | Estructura del código | «Arma la estructura del backend y del frontend» | Módulos en NestJS y páginas en React | Probamos cada flujo en el navegador | Separar responsabilidades |
 | Claude Code | Documentación | «Completa el README según el enunciado» | Borrador del README | Lo corregimos y completamos | Documentar mientras se trabaja |
 
