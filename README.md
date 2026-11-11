@@ -327,15 +327,14 @@ oscuro y en pantalla angosta. Las capturas están en [docs/capturas/](docs/captu
 
 ## Uso de inteligencia artificial
 
-Usamos **Claude Code** como apoyo para orientarnos con el enunciado, estructurar el código y redactar la
-documentación. También nos ayudó a escribir y corregir partes del código; todo lo revisamos, lo probamos en
-el navegador y lo ajustamos antes de integrarlo.
+Usamos **Claude Code** como apoyo en orientación, estructura del código y documentación. También ayudó a
+escribir y corregir partes del código; todo lo revisamos y probamos antes de integrarlo.
 
 | Herramienta | Propósito | Prompt de ejemplo | Resultado | Validación humana | Aprendizaje |
 |---|---|---|---|---|---|
-| Claude Code | Orientación | «Revisa el enunciado del Hito 3 y propón el modelo de datos, la colección de MongoDB y los endpoints del caso 3.4» | Propuesta de tablas, colección de conversaciones y lista de endpoints | Confirmamos el caso con el profesor, definimos el reparto y descartamos lo que no servía (Open Library, fotos de catálogo) | Acordar los datos antes de programar evita que tres personas choquen |
-| Claude Code | Estructura del código | «Comienza con la base del plan: infraestructura, usuarios, base de React y productos» | Un módulo por recurso en NestJS (controlador, servicio y esquemas) y en React páginas, componentes y servicios | Probamos cada flujo en el navegador y corregimos lo que falló (filtros vacíos, textos de stock, «Escritorio» sin categoría) | Separar responsabilidades hace el código más fácil de explicar y mantener |
-| Claude Code | Documentación | «Completa el README con todas las secciones que pide el enunciado» | Borrador del README y de los documentos de diseño | Revisamos el texto para que describa lo que hicimos | Documentar mientras se trabaja cuesta menos que hacerlo al final |
+| Claude Code | Orientación | «Revisa el enunciado y propón el modelo de datos» | Propuesta de tablas y endpoints | La ajustamos con el profesor | Diseñar los datos antes de programar |
+| Claude Code | Estructura del código | «Arma la estructura del backend y del frontend» | Módulos en NestJS y páginas en React | Probamos cada flujo en el navegador | Separar responsabilidades |
+| Claude Code | Documentación | «Completa el README según el enunciado» | Borrador del README | Lo corregimos y completamos | Documentar mientras se trabaja |
 
 ## Cómo trabajamos
 
