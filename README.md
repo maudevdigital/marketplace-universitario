@@ -327,19 +327,15 @@ oscuro y en pantalla angosta. Las capturas están en [docs/capturas/](docs/captu
 
 ## Uso de inteligencia artificial
 
-Usamos **Claude Code** como herramienta de apoyo durante todo el hito: para analizar el enunciado,
-proponer el diseño, escribir y corregir código, preparar pruebas y documentación, siempre a partir de
-nuestras instrucciones. Cada resultado lo revisamos, lo probamos en el navegador y decidimos si se
-quedaba: nosotros definimos el alcance y el reparto, detectamos errores y descartamos lo que no servía.
+Usamos **Claude Code** como apoyo para orientarnos con el enunciado, estructurar el código y redactar la
+documentación. También nos ayudó a escribir y corregir partes del código; todo lo revisamos, lo probamos en
+el navegador y lo ajustamos antes de integrarlo.
 
-| Etapa | Herramienta | Propósito | Prompt de ejemplo | Resultado | Validación humana | Aprendizaje |
-|---|---|---|---|---|---|---|
-| Diseño | Claude Code | Análisis y diseño | «Revisa el enunciado del Hito 3 y propón el modelo de datos, la colección de MongoDB y los endpoints del caso 3.4» | Nueve tablas, la colección de conversaciones, la lista de endpoints y un plan por historias | Confirmamos el cambio de caso con el profesor y fijamos el reparto en cadena (35 %, 35 % y 20 %) | Acordar el contrato de datos antes de programar permite que tres personas trabajen sin chocar |
-| API pública | Claude Code | Investigación | «¿Hay alguna API que reconozca cualquier producto y autocomplete la publicación?» | Comparó Open Library, UPCitemdb, eBay y Mercado Libre, y propuso el predictor de Mercado Libre | Descartamos Open Library (solo sirve para libros) y las fotos de catálogo (en un producto usado la foto tiene que ser la real). Al probar «Escritorio» vimos que quedaba sin categoría y pedimos corregirlo | Un servicio externo puede cerrarse: por eso se llama desde el backend y el formulario funciona sin él |
-| Código | Claude Code | Generación de código | «Comienza con mi parte del plan: infraestructura, usuarios, base de React y productos» (uno parecido para cada parte) | Backend en NestJS, pantallas en React, carrito, pedidos, pago simulado y conversaciones | Probamos la página en el navegador, revisamos y aprobamos las correcciones de lo que falló al probar cada parte (filtros vacíos que daban error, el texto «Solo quedan 1 unidad») y pedimos que las cuentas del equipo vinieran creadas | Las reglas de negocio van en el backend; React solo muestra y avisa |
-| Alcance | Claude Code | Revisión contra la rúbrica | «Revisa que lo desarrollado cumpla la rúbrica, sin cosas exageradas» | Detectó que la sugerencia tenía más de lo pedido y que faltaban las historias priorizadas y el mapa de navegación | Aceptamos recortar la sugerencia a categoría, marca y modelo y agregamos [docs/diseno.md](docs/diseno.md) | El enunciado prioriza una solución acotada que cada uno pueda defender |
-| Pruebas | Claude Code | Pruebas | «Escribe pruebas de las reglas de negocio y de los casos de error de toda la API» | 42 pruebas unitarias y 33 contra la API, incluida la compra simultánea de la última unidad | Pedimos no perder los datos de trabajo al probar: las pruebas que crean usuarios corren en una base aparte | Una prueba automática encuentra los errores de dos compras simultáneas, que a mano no se ven |
-| Documentación | Claude Code | Documentación | «Completa el README con todas las secciones que pide el enunciado» | Este README, la arquitectura y el diseño | Pedimos textos y mensajes de commit en palabras simples | Documentar mientras se trabaja cuesta menos que hacerlo al final |
+| Herramienta | Propósito | Prompt de ejemplo | Resultado | Validación humana | Aprendizaje |
+|---|---|---|---|---|---|
+| Claude Code | Orientación | «Revisa el enunciado del Hito 3 y propón el modelo de datos, la colección de MongoDB y los endpoints del caso 3.4» | Propuesta de tablas, colección de conversaciones y lista de endpoints | Confirmamos el caso con el profesor, definimos el reparto y descartamos lo que no servía (Open Library, fotos de catálogo) | Acordar los datos antes de programar evita que tres personas choquen |
+| Claude Code | Estructura del código | «Comienza con la base del plan: infraestructura, usuarios, base de React y productos» | Un módulo por recurso en NestJS (controlador, servicio y esquemas) y en React páginas, componentes y servicios | Probamos cada flujo en el navegador y corregimos lo que falló (filtros vacíos, textos de stock, «Escritorio» sin categoría) | Separar responsabilidades hace el código más fácil de explicar y mantener |
+| Claude Code | Documentación | «Completa el README con todas las secciones que pide el enunciado» | Borrador del README y de los documentos de diseño | Revisamos el texto para que describa lo que hicimos | Documentar mientras se trabaja cuesta menos que hacerlo al final |
 
 ## Cómo trabajamos
 
