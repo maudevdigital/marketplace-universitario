@@ -1,6 +1,7 @@
 // Datos iniciales: el mismo catálogo de la Actividad Evaluada 1, ahora guardado en PostgreSQL.
 // Se puede correr muchas veces: categorías y usuarios se actualizan por su campo único,
-// y los productos solo se cargan si la tabla está vacía (no pisa lo que publiquen los usuarios).
+// y de los productos solo se agregan los que falten (mismo título y vendedor): no se pisa ni se
+// repite nada, y lo que publiquen los usuarios queda intacto.
 //
 // Todos los usuarios de prueba entran con la contraseña de CLAVE_PRUEBA. Son datos ficticios.
 
@@ -103,6 +104,69 @@ const productos = [
     vendedor: 'fernanda.lagos@alumnos.cl', imagen: 'mancuernas1.webp', condicion: 'usado',
     descripcion: 'Par de barras con discos intercambiables y seguros de rosca. Sin óxido ni golpes.',
   },
+
+  // Hito 4: al menos tres productos por categoría, para que todas tengan algo que mostrar.
+  // Fotos de Wikimedia Commons con licencia libre (autores en docs/creditos-imagenes.md).
+  {
+    titulo: 'Escritorio para computador con repisas', precio: 55000, stock: 1, categoria: 'Hogar y muebles',
+    vendedor: 'diego.fuentes@alumnos.cl', imagen: 'escritorio1.webp', condicion: 'usado',
+    descripcion: 'Melamina color haya, con repisas laterales y bandeja para el teclado. Se entrega desarmado.',
+  },
+  {
+    titulo: 'Lámpara LED de escritorio recargable', precio: 12000, stock: 2, categoria: 'Hogar y muebles',
+    vendedor: 'valentina.perez@alumnos.cl', imagen: 'lampara1.webp', condicion: 'como_nuevo',
+    descripcion: 'Luz cálida con tres intensidades y batería que dura toda una noche de estudio. Carga por USB.',
+  },
+  {
+    titulo: 'Hervidor eléctrico 1,7 litros', precio: 10000, stock: 1, categoria: 'Hogar y muebles',
+    vendedor: 'camila.rojas@alumnos.cl', imagen: 'hervidor1.webp', condicion: 'usado',
+    descripcion: 'Hierve el agua en pocos minutos y se apaga solo. Ideal para la pieza o el departamento.',
+  },
+  {
+    titulo: 'Polerón con capucha negro, talla M', precio: 14000, stock: 1, categoria: 'Ropa y calzado',
+    vendedor: 'ignacio.torres@alumnos.cl', imagen: 'poleron1.webp', condicion: 'usado',
+    descripcion: 'Algodón grueso con estampado en el pecho y las mangas. Sin manchas ni hilos sueltos.',
+  },
+  {
+    titulo: 'Zapatillas de running, talla 42', precio: 30000, stock: 1, categoria: 'Ropa y calzado',
+    vendedor: 'tomas.herrera@alumnos.cl', imagen: 'zapatillas1.webp', condicion: 'como_nuevo',
+    descripcion: 'Livianas, de malla respirable y suela con buena amortiguación. Usadas solo un par de veces.',
+  },
+  {
+    titulo: 'Chaqueta de mezclilla, talla S', precio: 16000, stock: 1, categoria: 'Ropa y calzado',
+    vendedor: 'javiera.nunez@alumnos.cl', imagen: 'chaqueta1.webp', condicion: 'usado',
+    descripcion: 'Azul claro, con bolsillos en el pecho y todos sus botones. Me quedó chica.',
+  },
+  {
+    titulo: 'Delantal blanco de laboratorio, talla M', precio: 9000, stock: 3, categoria: 'Otros',
+    vendedor: 'fernanda.lagos@alumnos.cl', imagen: 'delantal1.webp', condicion: 'usado',
+    descripcion: 'Manga larga, tela antifluido y bolsillos amplios. Sirve para laboratorios y prácticas clínicas.',
+  },
+  {
+    titulo: 'Compás metálico de dibujo técnico', precio: 8000, stock: 1, categoria: 'Otros',
+    vendedor: 'carlos.mendoza@alumnos.cl', imagen: 'compas1.webp', condicion: 'usado',
+    descripcion: 'Compás de acero con arco de ajuste, firme y preciso. Para dibujo técnico o geometría.',
+  },
+  {
+    titulo: 'Termo de acero inoxidable de 1 litro', precio: 13000, stock: 2, categoria: 'Otros',
+    vendedor: 'matias.silva@alumnos.cl', imagen: 'termo1.webp', condicion: 'como_nuevo',
+    descripcion: 'Mantiene el agua caliente todo el día: perfecto para el mate o el café en la universidad.',
+  },
+  {
+    titulo: 'Mouse inalámbrico con receptor USB', precio: 7000, stock: 2, categoria: 'Accesorios',
+    vendedor: 'ignacio.torres@alumnos.cl', imagen: 'mouse1.webp', condicion: 'usado',
+    descripcion: 'Ergonómico, con botones de avance y retroceso. Funciona con una pila AA (incluida).',
+  },
+  {
+    titulo: 'Ukelele soprano de caoba', precio: 35000, stock: 1, categoria: 'Instrumentos',
+    vendedor: 'matias.silva@alumnos.cl', imagen: 'ukelele1.webp', condicion: 'usado',
+    descripcion: 'Afinado y con cuerdas en buen estado. Muy fácil para partir a tocar. Incluye funda.',
+  },
+  {
+    titulo: 'Raqueta de tenis con pelotas', precio: 25000, stock: 1, categoria: 'Deportes',
+    vendedor: 'tomas.herrera@alumnos.cl', imagen: 'raqueta1.webp', condicion: 'usado',
+    descripcion: 'Raqueta de grafito, grip nuevo y cuerdas tensas. Se entrega con tres pelotas.',
+  },
 ];
 
 async function main() {
@@ -127,12 +191,6 @@ async function main() {
   const equivalencias = await cargarEquivalencias(prisma);
   console.log(`Datos iniciales: ${equivalencias} equivalencias de categorías de Mercado Libre.`);
 
-  const productosExistentes = await prisma.producto.count();
-  if (productosExistentes > 0) {
-    console.log(`Datos iniciales: ya hay ${productosExistentes} productos, no se cargan de nuevo.`);
-    return;
-  }
-
   const idCategoria = Object.fromEntries(
     (await prisma.categoria.findMany()).map((c) => [c.nombre, c.id]),
   );
@@ -140,7 +198,15 @@ async function main() {
     (await prisma.usuario.findMany()).map((u) => [u.correo, u.id]),
   );
 
-  for (const p of productos) {
+  // Se buscan también los eliminados: si alguien borró un producto inicial, no vuelve a aparecer.
+  const yaCargados = new Set(
+    (await prisma.producto.findMany({ select: { titulo: true, vendedorId: true } })).map(
+      (p) => `${p.vendedorId}|${p.titulo}`,
+    ),
+  );
+  const faltantes = productos.filter((p) => !yaCargados.has(`${idUsuario[p.vendedor]}|${p.titulo}`));
+
+  for (const p of faltantes) {
     await prisma.producto.create({
       data: {
         titulo: p.titulo,
@@ -156,7 +222,10 @@ async function main() {
       },
     });
   }
-  console.log(`Datos iniciales: ${categorias.length} categorías, ${usuarios.length} usuarios y ${productos.length} productos.`);
+  console.log(
+    `Datos iniciales: ${categorias.length} categorías, ${usuarios.length} usuarios y ` +
+      `${faltantes.length} productos nuevos (${productos.length - faltantes.length} ya estaban).`,
+  );
 }
 
 main()
