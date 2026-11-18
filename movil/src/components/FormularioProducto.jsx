@@ -1,7 +1,7 @@
 import { File } from 'expo-file-system';
 import { ImageManipulator, SaveFormat } from 'expo-image-manipulator';
 import * as ImagePicker from 'expo-image-picker';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { ActivityIndicator, Alert, Image, KeyboardAvoidingView, Platform, Pressable, ScrollView, Text, View } from 'react-native';
 import usePeticion from '../hooks/usePeticion';
 import { urlImagen } from '../services/api';
@@ -61,6 +61,7 @@ export default function FormularioProducto({ producto, alEnviar, textoBoton }) {
   const [errores, setErrores] = useState({});
   const [errorGeneral, setErrorGeneral] = useState('');
   const [enviando, setEnviando] = useState(false);
+  const pantalla = useRef(null);
 
   const cambiar = (campo) => (valor) => setValores((actuales) => ({ ...actuales, [campo]: valor }));
 
@@ -96,7 +97,13 @@ export default function FormularioProducto({ producto, alEnviar, textoBoton }) {
     const encontrados = validar(valores, esEdicion);
     setErrores(encontrados);
     setErrorGeneral('');
-    if (Object.keys(encontrados).length > 0) return;
+    if (Object.keys(encontrados).length > 0) {
+      // El botón está al final y los errores junto a cada campo, más arriba: sin esto parecía que
+      // no pasaba nada. Se avisa arriba y la pantalla sube para mostrar los campos marcados en rojo.
+      setErrorGeneral('Revisa los datos marcados en rojo.');
+      pantalla.current?.scrollTo({ y: 0, animated: true });
+      return;
+    }
 
     const datos = new FormData();
     for (const [clave, valor] of Object.entries(valores)) datos.append(clave, String(valor).trim());
@@ -124,7 +131,7 @@ export default function FormularioProducto({ producto, alEnviar, textoBoton }) {
 
   return (
     <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : undefined} style={{ flex: 1 }} keyboardVerticalOffset={90}>
-      <ScrollView style={{ flex: 1, backgroundColor: colores.fondo }} contentContainerStyle={{ padding: 16, paddingBottom: 40 }}
+      <ScrollView ref={pantalla} style={{ flex: 1, backgroundColor: colores.fondo }} contentContainerStyle={{ padding: 16, paddingBottom: 40 }}
         keyboardShouldPersistTaps="handled">
         <Alerta texto={errorGeneral} />
 
