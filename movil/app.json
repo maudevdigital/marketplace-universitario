@@ -1,0 +1,37 @@
+{
+  "expo": {
+    "name": "UniMarket",
+    "slug": "unimarket-movil",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "ios": {
+      "supportsTablet": true
+    },
+    "android": {
+      "adaptiveIcon": {
+        "backgroundColor": "#E6F4FE",
+        "foregroundImage": "./assets/android-icon-foreground.png",
+        "backgroundImage": "./assets/android-icon-background.png",
+        "monochromeImage": "./assets/android-icon-monochrome.png"
+      }
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    },
+    "plugins": [
+      "expo-router",
+      "expo-secure-store",
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "UniMarket usa tus fotos para mostrar el producto que publicas.",
+          "cameraPermission": "UniMarket usa la cámara para fotografiar el producto que publicas."
+        }
+      ],
+      "expo-font"
+    ],
+    "scheme": "unimarket"
+  }
+}
