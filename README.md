@@ -1,12 +1,17 @@
 # UniMarket · Marketplace Universitario
 
-Plataforma web para comprar y vender artículos usados dentro de la comunidad universitaria.
-Hito 3 de Desarrollo Web y Móvil (segundo semestre 2026), **caso 3.4: Marketplace universitario**.
+Plataforma web y móvil para comprar y vender artículos usados dentro de la comunidad universitaria.
+Hitos 3 y 4 de Desarrollo Web y Móvil (segundo semestre 2026), **caso 3.4: Marketplace universitario**.
 
 ![Catálogo de UniMarket](docs/capturas/catalogo.png)
 
+> **Hito 4 (aplicación móvil):** la app en React Native está en [`movil/`](movil/). Instalación,
+> dirección de la API, capturas, flujos, endpoints usados y uso de inteligencia artificial están en
+> [`movil/README.md`](movil/README.md).
+
 ## Contenido
 
+0. [Hito 4: aplicación móvil](#hito-4-aplicación-móvil)
 1. [Integrantes](#integrantes-grupo-10)
 2. [Problema y usuarios](#problema-y-usuarios)
 3. [Continuidad y qué se agregó en el Hito 3](#continuidad-y-qué-se-agregó-en-el-hito-3)
@@ -21,6 +26,19 @@ Hito 3 de Desarrollo Web y Móvil (segundo semestre 2026), **caso 3.4: Marketpla
 12. [Limitaciones conocidas](#limitaciones-conocidas)
 13. [Uso de inteligencia artificial](#uso-de-inteligencia-artificial)
 14. [Cómo trabajamos](#cómo-trabajamos)
+
+## Hito 4: aplicación móvil
+
+Un segundo cliente del mismo sistema: la app de [`movil/`](movil/) (React Native con Expo) consume
+la misma API REST que la web y trabaja sobre las mismas bases de datos, sin backend propio.
+
+```bash
+docker compose up -d --build      # backend, bases y web
+cd movil && npm install && npx expo start --lan
+```
+
+Se escanea el código QR con el teléfono (Expo Go), que debe estar en la misma red que el computador.
+La app encuentra sola la dirección de la API. Todo el detalle está en [`movil/README.md`](movil/README.md).
 
 ## Integrantes (Grupo 10)
 
